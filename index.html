@@ -1,0 +1,2790 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منظومة الإشراف الإلكتروني والإدارة المدرسية | مدرسة محمد هاشم النقيب الثانوية المشتركة</title>
+    
+    <!-- الوسوم التعريفية العالمية لمشاركة الرابط (Open Graph & Meta Tags) -->
+    <meta name="description" content="البوابة الرسمية المتكاملة لإدارة السادة المعلمين، خطة توزيع الحصص، الجداول المدرسية، وسجلات المعلم المشرف 2026/2027 - مدرسة محمد هاشم النقيب الثانوية المشتركة بإدارة ميت غمر التعليمية.">
+    <meta name="keywords" content="مدرسة محمد هاشم النقيب, إدارة ميت غمر, البرمجة والذكاء الاصطناعي, سجلات المعلم المشرف, توزيع الحصص">
+    <meta name="author" content="أ/ محمود محمد عبد الوهاب عيسى">
+    <meta name="theme-color" content="#00e5ff">
+    
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="🦅 المنظومة الإلكترونية للمعلم المشرف | مدرسة محمد هاشم النقيب الثانوية المشتركة">
+    <meta property="og:description" content="البوابة الذكية لإدخال ومتابعة بيانات السادة المعلمين، الجداول الأسبوعية، وتقييمات المعلم المشرف المعتمدة 2026/2027.">
+    <meta property="og:image" content="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1200' height='630' viewBox='0 0 1200 630'><rect width='1200' height='630' fill='%23020617'/><circle cx='600' cy='315' r='250' fill='none' stroke='%2300e5ff' stroke-width='4' opacity='0.5'/><text x='600' y='240' font-size='44' font-weight='900' fill='%2300e5ff' text-anchor='middle' font-family='Arial, sans-serif'>إدارة ميت غمر التعليمية</text><text x='600' y='320' font-size='38' font-weight='bold' fill='%23ffffff' text-anchor='middle' font-family='Arial, sans-serif'>مدرسة محمد هاشم النقيب الثانوية المشتركة</text><text x='600' y='400' font-size='30' font-weight='900' fill='%23e5c158' text-anchor='middle' font-family='Arial, sans-serif'>بوابة المعلم المشرف وجداول الحصص والأنصبة 2026/2027</text></svg>">
+    
+    <!-- الخطوط والأيقونات -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900;1000&family=Changa:wght@600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-base: #020714;
+            --bg-card: rgba(8, 24, 48, 0.78);
+            --border-glow: rgba(0, 229, 255, 0.35);
+            --primary: #00e5ff;
+            --primary-glow: rgba(0, 229, 255, 0.5);
+            --secondary: #0d6efd;
+            --accent: #e5c158;
+            --accent-glow: rgba(229, 193, 88, 0.4);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --mandate-color: #c084fc;
+            --mandate-bg: rgba(192, 132, 252, 0.15);
+            --font-main: 'Cairo', sans-serif;
+            --font-title: 'Changa', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-main);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: radial-gradient(circle at 50% 10%, #0a1f3c 0%, var(--bg-base) 85%);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: 
+                linear-gradient(to right, rgba(0, 229, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(0, 229, 255, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1360px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 2;
+            flex: 1;
+        }
+
+        /* شريط الملاحة العلوي */
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(4, 15, 32, 0.88);
+            border: 1px solid var(--border-glow);
+            backdrop-filter: blur(18px);
+            padding: 16px 30px;
+            border-radius: 22px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6), inset 0 0 15px rgba(0,229,255,0.12);
+            margin-bottom: 30px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .logo-box {
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #001738, #00e5ff);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            color: #fff;
+            box-shadow: 0 0 20px var(--primary-glow);
+            border: 2px solid var(--accent);
+            animation: pulseGlow 3s infinite alternate;
+        }
+
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 15px var(--primary-glow); }
+            100% { box-shadow: 0 0 30px var(--primary-glow), 0 0 15px var(--accent-glow); }
+        }
+
+        .brand-text h1 {
+            font-size: 1.35rem;
+            font-weight: 900;
+            color: #fff;
+            background: linear-gradient(90deg, #fff, var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .brand-text p {
+            font-size: 0.88rem;
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        .btn-admin-gate {
+            background: linear-gradient(135deg, #0d6efd, #00e5ff);
+            color: #020714;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 14px;
+            font-weight: 900;
+            font-size: 0.95rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 5px 20px rgba(0,229,255,0.4);
+        }
+
+        .btn-admin-gate:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 30px rgba(0,229,255,0.7);
+            filter: brightness(1.15);
+        }
+
+        /* ترويسة رئيسية */
+        .hero-banner {
+            text-align: center;
+            margin-bottom: 35px;
+            padding: 30px 20px;
+            background: radial-gradient(circle, rgba(0,229,255,0.12) 0%, transparent 75%);
+            border-radius: 24px;
+        }
+
+        .hero-banner .badge {
+            display: inline-block;
+            background: rgba(0, 229, 255, 0.15);
+            color: var(--primary);
+            border: 1px solid var(--primary);
+            padding: 6px 22px;
+            border-radius: 50px;
+            font-size: 0.92rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+            letter-spacing: 0.5px;
+        }
+
+        .hero-banner h2 {
+            font-size: 2.2rem;
+            font-weight: 1000;
+            margin-bottom: 12px;
+            color: #fff;
+            text-shadow: 0 0 25px rgba(0,229,255,0.6);
+        }
+
+        .hero-banner p {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            max-width: 860px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        /* كارد الإدخال */
+        .main-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-glow);
+            backdrop-filter: blur(25px);
+            border-radius: 26px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7), inset 0 0 30px rgba(0, 229, 255, 0.06);
+            margin-bottom: 50px;
+            position: relative;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-bottom: 2px solid rgba(0,229,255,0.2);
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+        }
+
+        .section-header i {
+            font-size: 1.8rem;
+            color: var(--primary);
+            filter: drop-shadow(0 0 10px var(--primary));
+        }
+
+        .section-header h3 {
+            font-size: 1.35rem;
+            font-weight: 900;
+            color: #fff;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 22px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            font-size: 0.94rem;
+            font-weight: 700;
+            color: #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-group label i {
+            color: var(--primary);
+        }
+
+        .form-control {
+            background: rgba(3, 12, 28, 0.85);
+            border: 1.5px solid rgba(0, 229, 255, 0.3);
+            border-radius: 14px;
+            padding: 13px 18px;
+            color: #fff;
+            font-size: 0.98rem;
+            font-weight: 600;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 20px rgba(0, 229, 255, 0.4);
+            background: rgba(3, 16, 38, 0.95);
+        }
+
+        .form-control[readonly] {
+            background: rgba(15, 23, 42, 0.6);
+            border-color: rgba(255, 255, 255, 0.1);
+            color: #38bdf8;
+            cursor: not-allowed;
+        }
+
+        /* عرض الأنصبة */
+        .quota-showcase {
+            background: linear-gradient(135deg, rgba(0, 229, 255, 0.08), rgba(13, 110, 253, 0.08));
+            border: 1.5px dashed var(--primary);
+            border-radius: 18px;
+            padding: 24px;
+            margin-bottom: 35px;
+        }
+
+        .quota-showcase-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .quota-showcase-title h4 {
+            font-size: 1.08rem;
+            color: var(--accent);
+            font-weight: 800;
+        }
+
+        .quota-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .quota-chip {
+            background: rgba(0, 229, 255, 0.15);
+            border: 1px solid var(--primary);
+            padding: 7px 14px;
+            border-radius: 30px;
+            font-size: 0.86rem;
+            font-weight: 700;
+            color: #fff;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .quota-chip b {
+            color: var(--accent);
+        }
+
+        .mandate-badge {
+            background: var(--mandate-bg);
+            border: 1.5px solid var(--mandate-color);
+            color: #e9d5ff;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.82rem;
+            font-weight: 800;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* التعهد والإقرار */
+        .commitments-panel {
+            background: rgba(2, 8, 20, 0.7);
+            border-radius: 20px;
+            padding: 25px;
+            border: 1px solid rgba(229, 193, 88, 0.3);
+            margin-bottom: 35px;
+        }
+
+        .commitments-panel h4 {
+            color: var(--accent);
+            font-size: 1.15rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            padding: 12px 18px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .checkbox-item:hover {
+            background: rgba(0, 229, 255, 0.06);
+            border-color: var(--primary);
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 22px;
+            height: 22px;
+            accent-color: var(--primary);
+            cursor: pointer;
+        }
+
+        .checkbox-item label {
+            font-size: 0.96rem;
+            font-weight: 700;
+            color: #f1f5f9;
+            cursor: pointer;
+            line-height: 1.6;
+        }
+
+        .legal-pledge-box {
+            background: linear-gradient(135deg, rgba(229, 193, 88, 0.1), rgba(0,0,0,0.5));
+            border-right: 5px solid var(--accent);
+            padding: 18px 22px;
+            border-radius: 12px;
+            margin-top: 20px;
+            line-height: 1.8;
+            font-size: 0.95rem;
+            color: #fef08a;
+            font-weight: 700;
+        }
+
+        .btn-submit-sync {
+            width: 100%;
+            padding: 18px;
+            border-radius: 16px;
+            border: none;
+            background: linear-gradient(90deg, #00b4d8, #0077b6, #00e5ff);
+            background-size: 200% auto;
+            color: #020714;
+            font-size: 1.25rem;
+            font-weight: 900;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            box-shadow: 0 10px 30px rgba(0, 229, 255, 0.4);
+            transition: all 0.4s ease;
+        }
+
+        .btn-submit-sync:hover {
+            background-position: right center;
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0, 229, 255, 0.7);
+        }
+
+        /* نافذة الدخول */
+        .login-dialog {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(10px);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-dialog.active {
+            display: flex;
+        }
+
+        .login-card {
+            background: #041026;
+            border: 2px solid var(--primary);
+            border-radius: 24px;
+            padding: 35px;
+            width: 100%;
+            max-width: 440px;
+            text-align: center;
+            box-shadow: 0 0 50px rgba(0, 229, 255, 0.4);
+        }
+
+        .login-card i.lock-icon {
+            font-size: 3.5rem;
+            color: var(--accent);
+            margin-bottom: 20px;
+            filter: drop-shadow(0 0 15px var(--accent-glow));
+        }
+
+        .login-card h3 {
+            font-size: 1.4rem;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+
+        /* لوحة التحكم الرئيسية */
+        .admin-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(1, 4, 10, 0.97);
+            backdrop-filter: blur(25px);
+            z-index: 9999;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .admin-modal.active {
+            display: block;
+            animation: modalFade 0.3s ease;
+        }
+
+        @keyframes modalFade {
+            from { opacity: 0; transform: scale(0.98); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .admin-box {
+            max-width: 1440px;
+            margin: 0 auto;
+            background: #040d21;
+            border: 2px solid var(--primary);
+            border-radius: 28px;
+            padding: 35px;
+            box-shadow: 0 0 70px rgba(0, 229, 255, 0.3);
+            position: relative;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid rgba(0, 229, 255, 0.3);
+            padding-bottom: 20px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .admin-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .admin-title h2 {
+            font-size: 1.7rem;
+            color: #fff;
+            font-weight: 1000;
+        }
+
+        .btn-close-modal {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            border: 1px solid #ef4444;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            font-size: 1.3rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-close-modal:hover {
+            background: #ef4444;
+            color: #fff;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: rgba(8, 26, 54, 0.85);
+            border: 1px solid rgba(0, 229, 255, 0.25);
+            border-radius: 18px;
+            padding: 18px;
+            text-align: center;
+            position: relative;
+        }
+
+        .stat-card::after {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 3px;
+            background: linear-gradient(90deg, var(--secondary), var(--primary));
+        }
+
+        .stat-card h5 {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .stat-card .stat-val {
+            font-size: 2rem;
+            font-weight: 1000;
+            color: var(--primary);
+            text-shadow: 0 0 15px rgba(0, 229, 255, 0.5);
+        }
+
+        .admin-tabs {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+
+        .tab-btn {
+            background: rgba(255, 255, 255, 0.05);
+            color: #cbd5e1;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 11px 18px;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tab-btn.active, .tab-btn:hover {
+            background: linear-gradient(135deg, #0d6efd, #00e5ff);
+            color: #020714;
+            border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(0, 229, 255, 0.4);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* الجداول العامة والأدوات */
+        .table-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            border-radius: 16px;
+            border: 1px solid rgba(0, 229, 255, 0.2);
+            background: rgba(2, 8, 20, 0.85);
+            margin-bottom: 25px;
+        }
+
+        .official-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: center;
+            font-size: 0.92rem;
+        }
+
+        .official-table th {
+            background: linear-gradient(180deg, #0f2b54, #081a36);
+            color: var(--primary);
+            padding: 12px 8px;
+            font-weight: 900;
+            border: 1px solid #1e3a66;
+            white-space: nowrap;
+        }
+
+        .official-table td {
+            padding: 11px 8px;
+            border: 1px solid #172a46;
+            color: #e2e8f0;
+            font-weight: 600;
+        }
+
+        .official-table tr:nth-child(even) {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .official-table tr:hover {
+            background: rgba(0, 229, 255, 0.07);
+        }
+
+        .btn-action {
+            background: rgba(0, 229, 255, 0.15);
+            border: 1px solid var(--primary);
+            color: #fff;
+            padding: 9px 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.86rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            transition: all 0.2s;
+        }
+
+        .btn-action:hover {
+            background: var(--primary);
+            color: #020714;
+            box-shadow: 0 0 15px var(--primary-glow);
+        }
+
+        .btn-action.gold {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: rgba(229, 193, 88, 0.15);
+        }
+
+        .btn-action.gold:hover {
+            background: var(--accent);
+            color: #020714;
+        }
+
+        .btn-action.danger {
+            border-color: var(--danger);
+            color: var(--danger);
+            background: rgba(239, 68, 68, 0.15);
+        }
+
+        .btn-action.danger:hover {
+            background: var(--danger);
+            color: #fff;
+        }
+
+        .btn-action.secondary {
+            border-color: #64748b;
+            color: #cbd5e1;
+            background: rgba(100, 116, 139, 0.2);
+        }
+
+        /* بطاقة جدول الحصص */
+        .timetable-cell {
+            font-size: 0.82rem;
+            line-height: 1.4;
+            padding: 6px !important;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .timetable-cell:hover {
+            background: rgba(0, 229, 255, 0.15) !important;
+        }
+        .timetable-cell b {
+            color: var(--primary);
+            display: block;
+        }
+        .timetable-cell span {
+            color: var(--accent);
+            font-size: 0.78rem;
+        }
+
+        /* نافذة النماذج المنبثقة */
+        .crud-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.88);
+            backdrop-filter: blur(12px);
+            z-index: 10001;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .crud-modal.active {
+            display: flex;
+        }
+
+        .crud-card {
+            background: #04122d;
+            border: 2px solid var(--primary);
+            border-radius: 24px;
+            padding: 30px;
+            width: 100%;
+            max-width: 720px;
+            max-height: 92vh;
+            overflow-y: auto;
+            box-shadow: 0 0 60px rgba(0, 229, 255, 0.4);
+        }
+
+        .crud-card h3 {
+            font-size: 1.3rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid rgba(0,229,255,0.2);
+            padding-bottom: 10px;
+        }
+
+        /* نظام الرصد التلقائي للتقييم الإشرافي */
+        .eval-criteria-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .eval-item-box {
+            background: rgba(2, 8, 20, 0.7);
+            border: 1px solid rgba(0, 229, 255, 0.2);
+            padding: 12px;
+            border-radius: 12px;
+        }
+        .eval-item-box label {
+            font-size: 0.88rem;
+            color: #cbd5e1;
+            font-weight: 700;
+            margin-bottom: 6px;
+            display: block;
+        }
+        .eval-item-box select {
+            width: 100%;
+            background: rgba(3, 16, 38, 0.9);
+            color: var(--primary);
+            border: 1px solid rgba(0, 229, 255, 0.4);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-weight: 800;
+            outline: none;
+        }
+
+        /* نافذة إشعار الإرسال الاحتفالية العالمية */
+        .celebration-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(1, 6, 18, 0.92);
+            backdrop-filter: blur(16px);
+            z-index: 10005;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .celebration-modal.active {
+            display: flex;
+            animation: modalFade 0.4s ease;
+        }
+        .celebration-card {
+            background: radial-gradient(circle at 50% 10%, #0d284f 0%, #030c1d 90%);
+            border: 2px solid var(--primary);
+            border-radius: 30px;
+            padding: 40px 30px;
+            max-width: 550px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 0 80px rgba(0, 229, 255, 0.4), inset 0 0 30px rgba(0, 229, 255, 0.15);
+            overflow: hidden;
+        }
+        .celebration-card::before {
+            content: "";
+            position: absolute;
+            top: -50%; left: -50%; width: 200%; height: 200%;
+            background: conic-gradient(transparent, rgba(0, 229, 255, 0.1), transparent 30%);
+            animation: rotateBg 8s linear infinite;
+            pointer-events: none;
+        }
+        @keyframes rotateBg {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .celebration-icon-box {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #00e5ff, #0077b6);
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 45px;
+            color: #020714;
+            box-shadow: 0 0 35px var(--primary-glow);
+            border: 3px solid #fff;
+            animation: bounceIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            z-index: 2;
+        }
+        @keyframes bounceIn {
+            0% { transform: scale(0); opacity: 0; }
+            60% { transform: scale(1.15); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .celebration-card h3 {
+            font-size: 1.7rem;
+            font-weight: 1000;
+            color: #fff;
+            margin-bottom: 12px;
+            position: relative;
+            z-index: 2;
+            text-shadow: 0 0 20px rgba(0, 229, 255, 0.6);
+        }
+        .celebration-card p {
+            color: #cbd5e1;
+            font-size: 1rem;
+            line-height: 1.7;
+            margin-bottom: 25px;
+            position: relative;
+            z-index: 2;
+        }
+        .celebration-details {
+            background: rgba(2, 8, 20, 0.8);
+            border: 1px solid rgba(0, 229, 255, 0.25);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 25px;
+            text-align: right;
+            position: relative;
+            z-index: 2;
+        }
+        .celebration-details div {
+            margin-bottom: 8px;
+            font-size: 0.92rem;
+            color: #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+        }
+        .celebration-details div span {
+            color: var(--primary);
+            font-weight: 800;
+        }
+
+        /* =========================================================
+           نظام الطباعة الاحترافي المتقدم A4 PERFECT FIT
+           ========================================================= */
+        .print-official-header, .print-official-signatures {
+            display: none;
+        }
+
+        @media print {
+            @page {
+                size: A4 portrait;
+                margin: 10mm 15mm 10mm 15mm;
+            }
+            body.landscape-mode @page {
+                size: A4 landscape;
+                margin: 10mm 15mm 10mm 15mm;
+            }
+
+            body * {
+                visibility: hidden !important;
+            }
+            body {
+                background: #fff !important;
+                color: #000 !important;
+                font-family: 'Cairo', sans-serif !important;
+                overflow: visible !important;
+            }
+            .admin-modal, .admin-modal * {
+                visibility: visible !important;
+            }
+            .admin-modal {
+                position: absolute !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                background: #fff !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                overflow: visible !important;
+            }
+            .admin-box {
+                border: none !important;
+                box-shadow: none !important;
+                background: #fff !important;
+                padding: 0 !important;
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+
+            .top-nav, .btn-close-modal, .table-toolbar, .admin-tabs, .stats-grid, 
+            .footer-wrapper, .btn-action, .crud-modal, .login-dialog, .celebration-modal, .no-print {
+                display: none !important;
+            }
+
+            .tab-content {
+                display: none !important;
+            }
+            .tab-content.active {
+                display: block !important;
+                page-break-after: auto;
+            }
+
+            /* ترويسة وزارية رسمية للطباعة */
+            .print-official-header {
+                display: flex !important;
+                justify-content: space-between;
+                align-items: flex-start;
+                border-bottom: 3px double #000;
+                padding-bottom: 15px;
+                margin-bottom: 20px;
+                color: #000;
+            }
+            .print-official-header .school-info {
+                text-align: right;
+                font-weight: 900;
+                font-size: 11pt;
+                line-height: 1.5;
+            }
+            .print-official-header .doc-title-box {
+                text-align: center;
+                flex-grow: 1;
+            }
+            .print-official-header .doc-title {
+                font-size: 16pt;
+                font-weight: 1000;
+                text-decoration: underline;
+                margin-bottom: 6px;
+            }
+            .print-official-header .doc-subtitle {
+                font-size: 12pt;
+                font-weight: bold;
+            }
+            .print-official-header .meta-info {
+                text-align: left;
+                font-size: 10pt;
+                font-weight: bold;
+                line-height: 1.5;
+            }
+
+            /* ملاءمة الجداول بدقة تامة لورقة A4 دون خروج */
+            .table-responsive {
+                overflow: visible !important;
+                border: none !important;
+                background: transparent !important;
+                margin-bottom: 0 !important;
+            }
+            .official-table {
+                width: 100% !important;
+                max-width: 100% !important;
+                table-layout: auto !important; /* السماح بتوزيع المسافات بحرية */
+                border-collapse: collapse !important;
+            }
+            .official-table th, .official-table td {
+                border: 1px solid #000 !important;
+                color: #000 !important;
+                background: #fff !important;
+                padding: 8px 5px !important;
+                font-size: 10pt !important;
+                line-height: 1.3 !important;
+                word-wrap: break-word !important;
+                overflow-wrap: break-word !important;
+            }
+            .official-table th {
+                background: #eef2f6 !important;
+                font-weight: 900 !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            tr {
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+
+            .quota-chip, .mandate-badge {
+                border: 1px solid #333 !important;
+                color: #000 !important;
+                background: transparent !important;
+                padding: 2px 6px !important;
+                font-size: 9pt !important;
+                display: inline-block;
+            }
+            .quota-chip b, .mandate-badge b {
+                color: #000 !important;
+            }
+
+            /* تذييل الاعتمادات المعتمدة من القيادات */
+            .print-official-signatures {
+                display: flex !important;
+                justify-content: space-between;
+                align-items: flex-start;
+                margin-top: 40px;
+                padding-top: 20px;
+                border-top: 2px dashed #000;
+                font-weight: 900;
+                font-size: 12pt;
+                color: #000;
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+            .sig-col {
+                text-align: center;
+                width: 25%;
+            }
+            .sig-name {
+                margin-top: 35px;
+                font-size: 11pt;
+            }
+            .seal-box {
+                border: 2px dashed #444;
+                width: 100px;
+                height: 100px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 9pt;
+                color: #444;
+                margin: 0 auto;
+            }
+        }
+
+        /* =========================================================
+           FOOTER PROFESSIONALLY CENTERED - SOVEREIGN EAGLE
+           (Colors Updated to Bright Blue & Cyan)
+           ========================================================= */
+        .footer-wrapper {
+            padding: 80px 20px; 
+            background: linear-gradient(180deg, rgba(2, 5, 10, 0.98) 0%, #01040a 100%); 
+            border-top: 3px solid #00ffff; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            margin-top: auto;
+            position: relative; 
+            overflow: hidden; 
+            height: 550px; 
+            flex-shrink: 0; 
+            box-shadow: 0 -15px 50px rgba(0, 255, 255, 0.25);
+        }
+
+        .circle-container { 
+            position: relative; 
+            width: 480px; 
+            height: 480px; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center;
+        }
+
+        .rotating-svg { 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            animation: rotateText 22s linear infinite; 
+            z-index: 2; 
+        }
+
+        @keyframes rotateText { 
+            0% { transform: rotate(0deg); } 
+            100% { transform: rotate(360deg); } 
+        }
+
+        .text-path-style { 
+            font-size: 20px; 
+            fill: #00e5ff; /* Cyan Text */
+            font-family: 'Arial Black', Impact, sans-serif; 
+            letter-spacing: 6px; 
+            filter: drop-shadow(0 0 8px rgba(0, 229, 255, 0.8)); 
+        }
+
+        .name-highlight { 
+            font-size: 28px; 
+            font-weight: 900; 
+            fill: #0077ff; /* Bright Blue Name */
+            letter-spacing: 4px; 
+            text-transform: uppercase; 
+            filter: drop-shadow(0 0 12px rgba(0, 119, 255, 0.8));
+        }
+
+        .center-prayer {
+            position: relative; 
+            width: 340px; 
+            text-align: center; 
+            font-size: 2.1rem; 
+            font-weight: 900; 
+            color: #00ffff; /* Cyan Prayer */
+            line-height: 1.8; 
+            z-index: 10;
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            align-items: center;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.9), 0 0 35px rgba(0, 255, 255, 0.6);
+        }
+
+        .center-prayer::before { 
+            content: "🦅"; 
+            font-size: 2.4rem; 
+            margin-bottom: 12px; 
+            opacity: 0.95; 
+            filter: drop-shadow(0 0 15px #0077ff); 
+        }
+
+        .center-prayer::after { 
+            content: "🦅"; 
+            font-size: 2.4rem; 
+            margin-top: 12px; 
+            opacity: 0.95; 
+            filter: drop-shadow(0 0 15px #0077ff); 
+            transform: scaleX(-1); 
+        }
+
+        @media (max-width: 768px) {
+            .top-nav { flex-direction: column; gap: 15px; text-align: center; }
+            .brand { flex-direction: column; }
+            .hero-banner h2 { font-size: 1.6rem; }
+            .main-card { padding: 20px; }
+            .circle-container { width: 330px; height: 330px; }
+            .center-prayer { font-size: 1.4rem; width: 240px; }
+            .footer-wrapper { height: 420px; }
+            .eval-criteria-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- الشريط العلوي الذكي -->
+        <header class="top-nav">
+            <div class="brand">
+                <div class="logo-box">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <div class="brand-text">
+                    <h1>مدرسة محمد هاشم النقيب الثانوية المشتركة</h1>
+                    <p><i class="fa-solid fa-location-dot"></i> إدارة ميت غمر التعليمية | مديرية التربية والتعليم بالدقهلية</p>
+                </div>
+            </div>
+            <div class="nav-actions">
+                <button class="btn-admin-gate" onclick="openLoginDialog()">
+                    <i class="fa-solid fa-lock"></i>
+                    لوحة تحكم المعلم المشرف
+                </button>
+            </div>
+        </header>
+
+        <!-- البانر الترحيبي -->
+        <div class="hero-banner">
+            <span class="badge"><i class="fa-solid fa-bolt"></i> منظومة الإشراف والأنصبة والجداول المدرسية 2026 / 2027</span>
+            <h2>البوابة الرسمية لاستيفاء وتأكيد بيانات السادة المعلمين</h2>
+            <p>يرجى إدخال كود المعلم أو اختياره لاستدعاء الأنصبة والفصول المسندة فورياً واستيفاء إقرارات الدفاتر والتعهد الرسمي.</p>
+        </div>
+
+        <!-- كارد إدخال البيانات للواجهة الرئيسية -->
+        <main class="main-card">
+            <div class="section-header">
+                <i class="fa-solid fa-address-card"></i>
+                <h3>استيفاء البيانات والأنصبة التدريسية والإقرارات الرسمية</h3>
+            </div>
+
+            <form id="teacherEntryForm" onsubmit="handleFormSubmission(event)">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="searchTeacherSelect"><i class="fa-solid fa-list-check"></i> اختيار المعلم السريع:</label>
+                        <select id="searchTeacherSelect" class="form-control" onchange="autoFillBySelect(this.value)">
+                            <option value="">-- اضغط لاختيار اسم المعلم --</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="teacherCode"><i class="fa-solid fa-barcode"></i> كود المعلم (أدخله للاسترجاع الفوري):</label>
+                        <input type="text" id="teacherCode" class="form-control" placeholder="أدخل كود المعلم..." required oninput="autoFillByCode(this.value)">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="teacherName"><i class="fa-solid fa-user"></i> اسم المعلم رباعي:</label>
+                        <input type="text" id="teacherName" class="form-control" placeholder="الاسم رباعي..." required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="nationalId"><i class="fa-solid fa-id-card"></i> الرقم القومي (14 رقم):</label>
+                        <input type="text" id="nationalId" class="form-control" placeholder="الرقم القومي..." maxlength="14" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="teacherJobTitle"><i class="fa-solid fa-award"></i> الوظيفة على الكادر / التخصص:</label>
+                        <input type="text" id="teacherJobTitle" class="form-control" readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="teacherSubject"><i class="fa-solid fa-book-open"></i> المادة المسندة:</label>
+                        <input type="text" id="teacherSubject" class="form-control" readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="teacherPhone"><i class="fa-solid fa-phone"></i> رقم الهاتف الشخصي للتواصل:</label>
+                        <input type="tel" id="teacherPhone" class="form-control" placeholder="01xxxxxxxxx" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="quotaSummary"><i class="fa-solid fa-chart-pie"></i> موقف النصاب والانتداب:</label>
+                        <input type="text" id="quotaSummary" class="form-control" readonly style="color: var(--accent); font-weight: 800;">
+                    </div>
+                </div>
+
+                <!-- صندوق عرض الفصول والأنصبة بدقة متناهية -->
+                <div class="quota-showcase">
+                    <div class="quota-showcase-title">
+                        <h4><i class="fa-solid fa-chalkboard-user"></i> بيان الفصول والحصص المسندة وموقف الندب:</h4>
+                        <span id="classesCountBadge" class="quota-chip">إجمالي الفصول: <b>-</b></span>
+                    </div>
+                    <div id="quotaBadgesList" class="quota-badges">
+                        <span style="color: var(--text-muted); font-size: 0.95rem;">يرجى اختيار المعلم لعرض الفصول والحصص التفصيلية فوراً.</span>
+                    </div>
+                </div>
+
+                <!-- إقرارات استلام الدفاتر والترقيم والتعهد الرسمي -->
+                <div class="commitments-panel">
+                    <h4><i class="fa-solid fa-clipboard-check"></i> إقرارات استيفاء الدفاتر والسجلات والتعهد القانوني (مختومة ومرقمة):</h4>
+
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="prepBookCompleted" required>
+                        <label for="prepBookCompleted">أقر بأنه تم الانتهاء من إعداد كشكول / دفتر تحضير الدروس وتوزيع المنهج المعتمد، وأنه كامل ومستوفٍ، ومرقم ومختوم بخاتم المدرسة رسمياً.</label>
+                    </div>
+
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="gradeRecordCompleted" required>
+                        <label for="gradeRecordCompleted">أقر بإعداد وتجهيز سجل الدرجات والتقييمات الأسبوعية والشهرية وسجل الأداءات والمواظبة وفق النماذج المقررة، ومرقم ومختوم.</label>
+                    </div>
+
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="timetableReceived" required>
+                        <label for="timetableReceived">أقر باستلام الجدول المدرسي الأسبوعي وتوزيع الحصص المعتمد والالتزام بمواعيد الحصص والاحتياطي والإشراف اليومي والتوقيع بالعلم.</label>
+                    </div>
+
+                    <div class="legal-pledge-box">
+                        <div class="checkbox-item" style="background: transparent; border: none; margin: 0; padding: 0;">
+                            <input type="checkbox" id="legalPledgeCheck" required>
+                            <label for="legalPledgeCheck" style="color: #fef08a;">
+                                <b>صيغة التعهد الرسمي القانوني:</b> "أتعهد أنا المعلم الموضح اسمي وبياناتي أعلاه بأن جميع البيانات المدخلة صحيحة تماماً وكاملة تحت مسؤوليتي القانونية والإدارية، وبأنني تسلمت كافة المهام المسندة إلي والتزمت بإنهاء واعتماد كافة الدفاتر والسجلات وفقاً للقرارات الوزارية وقواعد التوجيه الفني للعام الدراسي 2026/2027 بمدرسة محمد هاشم النقيب الثانوية المشتركة."
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-submit-sync" id="submitBtn">
+                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                    إرسال وحفظ ومزامنة البيانات تلقائياً
+                </button>
+            </form>
+        </main>
+    </div>
+
+    <!-- نافذة الإشعار الاحتفالية العالمية (World-Class Success Modal) -->
+    <div id="celebrationModal" class="celebration-modal">
+        <div class="celebration-card">
+            <div class="celebration-icon-box">
+                <i class="fa-solid fa-check"></i>
+            </div>
+            <h3>تم الحفظ والمزامنة بنجاح تام!</h3>
+            <p>تم استلام إقرار وتعهد المعلم واعتماد صحة البيانات واستيفاء الدفاتر رسمياً في المنظومة السحابية لمدرسة محمد هاشم النقيب الثانوية المشتركة.</p>
+            
+            <div class="celebration-details" id="celebrationDetailsBox">
+                <!-- تمتلئ ديناميكياً ببيانات المعلم -->
+            </div>
+
+            <div style="display: flex; gap: 10px; justify-content: center; position: relative; z-index: 2; flex-wrap: wrap;">
+                <button class="btn-action" onclick="printReceiptDirect()"><i class="fa-solid fa-print"></i> طباعة إيصال التعهد</button>
+                <button class="btn-action gold" onclick="closeCelebrationModal()"><i class="fa-solid fa-circle-check"></i> تم ومتابعة</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة طلب كلمة المرور للدخول -->
+    <div id="loginDialog" class="login-dialog">
+        <div class="login-card">
+            <i class="fa-solid fa-user-shield lock-icon"></i>
+            <h3>لوحة تحكم المعلم المشرف</h3>
+            <p>أدخل كلمة المرور السرية المعتمدة للوصول لكافة السجلات والتقارير</p>
+            <input type="password" id="adminPasswordInput" class="form-control" placeholder="كلمة المرور..." style="margin-bottom: 20px; text-align: center; letter-spacing: 2px;">
+            <div style="display: flex; gap: 10px;">
+                <button class="btn-admin-gate" style="flex: 1; justify-content: center;" onclick="verifyAdminPassword()">دخول</button>
+                <button class="btn-action danger" onclick="closeLoginDialog()">إلغاء</button>
+            </div>
+            <div id="loginError" style="color: var(--danger); font-weight: bold; margin-top: 15px; display: none;">كلمة المرور غير صحيحة! حاول ثانية.</div>
+        </div>
+    </div>
+
+    <!-- لوحة التحكم الإدارية المتكاملة والسجلات الرسمية -->
+    <div id="adminModal" class="admin-modal">
+        <div class="admin-box">
+            
+            <!-- ترويسة الطباعة الرسمية A4 القياسية -->
+            <div class="print-official-header">
+                <div class="school-info">
+                    <div>جمهورية مصر العربية</div>
+                    <div>وزارة التربية والتعليم والتعليم الفني</div>
+                    <div>مديرية التربية والتعليم بالدقهلية</div>
+                    <div>إدارة ميت غمر التعليمية</div>
+                    <div>مدرسة محمد هاشم النقيب الثانوية المشتركة</div>
+                </div>
+                <div class="doc-title-box">
+                    <div class="doc-title" id="printDocTitle">سجل المعلم المشرف الرسمي</div>
+                    <div class="doc-subtitle">للعام الدراسي 2026 / 2027 م</div>
+                </div>
+                <div class="meta-info">
+                    <div>المادة: الحاسب والبرمجة والذكاء الاصطناعي</div>
+                    <div>تاريخ الطباعة: <span id="printDateSpan"></span></div>
+                    <div>مستند رسمي معتمد</div>
+                </div>
+            </div>
+
+            <!-- هيدر اللوحة -->
+            <div class="admin-header">
+                <div class="admin-title">
+                    <i class="fa-solid fa-sliders" style="font-size: 2rem; color: var(--primary);"></i>
+                    <div>
+                        <h2>لوحة السجلات والإشراف الفني والجداول المدرسية</h2>
+                        <span style="color: var(--accent); font-weight: bold;">
+                            المعلم المشرف: أ/ محمود محمد عبد الوهاب عيسى | وكيل المدرسة: أ/ عبدالحميد عثمان عيد | القائم بأعمال مدير المدرسة: أ/ مسعود مخيمر
+                        </span>
+                    </div>
+                </div>
+                <button class="btn-close-modal" onclick="closeAdminModal()" title="إغلاق لوحة التحكم"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <!-- عدادات الإحصائيات الذكية -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h5>إجمالي المعلمين بالقسم</h5>
+                    <div class="stat-val" id="statTotalTeachers">0</div>
+                </div>
+                <div class="stat-card">
+                    <h5>إجمالي الحصص بالمدرسة</h5>
+                    <div class="stat-val" style="color: var(--accent);">58</div>
+                </div>
+                <div class="stat-card">
+                    <h5>الحصص الموزعة والمسندة</h5>
+                    <div class="stat-val" style="color: var(--success);" id="statAssignedHours">58</div>
+                </div>
+                <div class="stat-card">
+                    <h5>إقرارات الدفاتر المكتملة</h5>
+                    <div class="stat-val" id="statCompletedPledges">0</div>
+                </div>
+            </div>
+
+            <!-- تبويبات السجلات الرسمية -->
+            <div class="admin-tabs">
+                <button class="tab-btn active" onclick="switchAdminTab('tabSubmissions')"><i class="fa-solid fa-inbox"></i> البيانات المدخلة والإقرارات</button>
+                <button class="tab-btn" onclick="switchAdminTab('tabQuotaOfficial')"><i class="fa-solid fa-table-list"></i> سجل توزيع الحصص والانتداب</button>
+                <button class="tab-btn" onclick="switchAdminTab('tabMasterTimetable')"><i class="fa-solid fa-calendar-days"></i> جدول الحصص العام المجمع</button>
+                <button class="tab-btn" onclick="switchAdminTab('tabIndividualTimetable')"><i class="fa-solid fa-calendar-user"></i> جدول كل معلم مستقل</button>
+                <button class="tab-btn" onclick="switchAdminTab('tabTeachersPortal')"><i class="fa-solid fa-id-card-clip"></i> سجل بيانات المعلمين (الكادر)</button>
+                <button class="tab-btn" onclick="switchAdminTab('tabSupervisionEvaluation')"><i class="fa-solid fa-star-half-stroke"></i> سجل متابعة وتقييم المعلمين</button>
+                <button class="tab-btn" onclick="switchAdminTab('tabSignatures')"><i class="fa-solid fa-signature"></i> سجل توقيعات السادة المعلمين</button>
+                <button class="tab-btn" onclick="switchAdminTab('tabSyncSettings')"><i class="fa-solid fa-cloud"></i> المزامنة السحابية والإعدادات</button>
+            </div>
+
+            <!-- التبويب 1: البيانات المدخلة والتعهدات -->
+            <div id="tabSubmissions" class="tab-content active">
+                <div class="table-toolbar">
+                    <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                        <button class="btn-action" onclick="printActiveRecord('سجل البيانات المدخلة وإقرارات المعلمين الرسمية')"><i class="fa-solid fa-print"></i> طباعة A4</button>
+                        <button class="btn-action secondary" onclick="togglePrintOrientation()"><i class="fa-solid fa-rotate"></i> تبديل الاتجاه (طولي / عرضي)</button>
+                        <button class="btn-action gold" onclick="exportDataToExcel()"><i class="fa-solid fa-file-excel"></i> تصدير البيانات (Excel/CSV)</button>
+                    </div>
+                    <span style="color: var(--text-muted); font-size: 0.9rem;">البيانات المدخلة من الواجهة تظهر هنا فقط مع إمكانية التعديل والحذف الفوري</span>
+                </div>
+                <div class="table-responsive">
+                    <table class="official-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 4%;">#</th>
+                                <th style="width: 10%;">كود المعلم</th>
+                                <th style="width: 15%;">الاسم رباعي</th>
+                                <th style="width: 18%;">المادة المسندة</th>
+                                <th style="width: 11%;">دفتر التحضير</th>
+                                <th style="width: 11%;">سجل الدرجات</th>
+                                <th style="width: 11%;">استلام الجدول</th>
+                                <th style="width: 10%;">التعهد</th>
+                                <th class="no-print" style="width: 10%;">الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="submissionsTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- التبويب 2: سجل توزيع الحصص والانتداب بلون مميز -->
+            <div id="tabQuotaOfficial" class="tab-content">
+                <div class="table-toolbar">
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <button class="btn-action" onclick="printActiveRecord('سجل توزيع حصص مادة البرمجة والذكاء الاصطناعي والثقافة المالية وموقف الانتداب')"><i class="fa-solid fa-print"></i> طباعة كشف التوزيع الرسمي A4</button>
+                        <button class="btn-action secondary" onclick="togglePrintOrientation()"><i class="fa-solid fa-rotate"></i> تبديل الاتجاه (طولي / عرضي)</button>
+                        <button class="btn-action gold" onclick="openQuotaModal()"><i class="fa-solid fa-plus"></i> إضافة بيان نصاب جديد</button>
+                        <button class="btn-action" onclick="exportQuotaCSV()"><i class="fa-solid fa-download"></i> تصدير الحصص (CSV)</button>
+                    </div>
+                    <span style="color: var(--accent); font-weight: bold;">خطة توزيع الحصص المعتمدة (58 حصة بالمدرسة + حصص المدارس المنتدب إليها بلون مميز)</span>
+                </div>
+                <div class="table-responsive">
+                    <table class="official-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 3%;">م</th>
+                                <th style="width: 16%;">اسم المعلم</th>
+                                <th style="width: 34%;">المادة / الصف / الفصول المسندة بمدرستنا</th>
+                                <th style="width: 6%;">فصولنا</th>
+                                <th style="width: 6%;">مسندنا</th>
+                                <th style="width: 6%;">النصاب</th>
+                                <th style="width: 17%;">موقف الندب وحصص المدرسة المنتدب إليها</th>
+                                <th style="width: 12%;">البيان والملاحظات</th>
+                                <th class="no-print" style="width: 7%;">الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="quotaTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- التبويب 3: جدول الحصص الأسبوعي العام المجمع لمادة الحاسب والبرمجة والثقافة المالية -->
+            <div id="tabMasterTimetable" class="tab-content">
+                <div class="table-toolbar">
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <button class="btn-action" onclick="printActiveRecord('جدول الحصص العام المجمع لمادة البرمجة والذكاء الاصطناعي والثقافة المالية')"><i class="fa-solid fa-print"></i> طباعة الجدول العام A4</button>
+                        <button class="btn-action secondary" onclick="togglePrintOrientation()"><i class="fa-solid fa-rotate"></i> تبديل الاتجاه (طولي / عرضي)</button>
+                        <button class="btn-action gold" onclick="exportMasterScheduleJSON()"><i class="fa-solid fa-download"></i> تصدير الجدول العام (JSON)</button>
+                    </div>
+                    <span style="color: var(--primary); font-weight: bold;">اضغط على أي حصة في الجدول لتعديل الفصل أو المعلم مع الحفظ التلقائي الفوري</span>
+                </div>
+                <div class="table-responsive">
+                    <table class="official-table" id="masterTimetableTable">
+                        <thead>
+                            <tr>
+                                <th style="width: 9%;">اليوم</th>
+                                <th style="width: 13%;">الحصة 1</th>
+                                <th style="width: 13%;">الحصة 2</th>
+                                <th style="width: 13%;">الحصة 3</th>
+                                <th style="width: 13%;">الحصة 4</th>
+                                <th style="width: 13%;">الحصة 5</th>
+                                <th style="width: 13%;">الحصة 6</th>
+                                <th style="width: 13%;">الحصة 7</th>
+                            </tr>
+                        </thead>
+                        <tbody id="masterTimetableBody">
+                            <!-- تمتلئ ديناميكياً وتعدل تلقائياً -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- التبويب 4: جدول كل معلم مستقل مع التوقيع والطباعة المنفصلة -->
+            <div id="tabIndividualTimetable" class="tab-content">
+                <div class="table-toolbar">
+                    <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                        <label style="color: var(--primary); font-weight: 800;">اختر المعلم لعرض وطباعة جدوله:</label>
+                        <select id="individualTeacherSelect" class="form-control" style="width: auto; min-width: 250px;" onchange="renderIndividualSchedule(this.value)">
+                        </select>
+                        <button class="btn-action" onclick="printIndividualTeacherSchedule()"><i class="fa-solid fa-print"></i> طباعة جدول المعلم المستقل A4</button>
+                        <button class="btn-action gold" onclick="openEditTeacherScheduleModal()"><i class="fa-solid fa-pen"></i> تعديل جدول هذا المعلم</button>
+                    </div>
+                </div>
+                <div class="commitments-panel" id="individualScheduleCard" style="border-color: var(--primary);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1.5px solid rgba(0,229,255,0.3); padding-bottom: 10px; margin-bottom: 15px;">
+                        <h4 id="indivNameTitle" style="margin: 0; color: #fff;">جدول المعلم: -</h4>
+                        <span id="indivQuotaBadge" class="quota-chip">إجمالي الحصص: <b>-</b></span>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="official-table" id="indivTableBody">
+                            <thead>
+                                <tr>
+                                    <th style="width: 10%;">اليوم</th>
+                                    <th style="width: 12%;">الحصة 1</th>
+                                    <th style="width: 12%;">الحصة 2</th>
+                                    <th style="width: 12%;">الحصة 3</th>
+                                    <th style="width: 12%;">الحصة 4</th>
+                                    <th style="width: 12%;">الحصة 5</th>
+                                    <th style="width: 12%;">الحصة 6</th>
+                                    <th style="width: 12%;">الحصة 7</th>
+                                </tr>
+                            </thead>
+                            <tbody id="indivScheduleRows">
+                            </tbody>
+                        </table>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-top: 25px; padding-top: 15px; border-top: 1px dashed rgba(255,255,255,0.2); font-weight: bold; color: var(--accent);">
+                        <div>توقيع المعلم المستلم: ...............................</div>
+                        <div>المعلم المشرف: أ/ محمود عيسى</div>
+                        <div>وكيل المدرسة: أ/ عبدالحميد عثمان عيد</div>
+                        <div>يعتمد، القائم بأعمال مدير المدرسة: أ/ مسعود مخيمر</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- التبويب 5: سجل بيانات المعلمين والكادر الرسمي -->
+            <div id="tabTeachersPortal" class="tab-content">
+                <div class="table-toolbar">
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <button class="btn-action" onclick="printActiveRecord('سجل بيانات السادة المعلمين على الكادر - مدرسة محمد هاشم النقيب')"><i class="fa-solid fa-print"></i> طباعة السجل الرسمي A4</button>
+                        <button class="btn-action secondary" onclick="togglePrintOrientation()"><i class="fa-solid fa-rotate"></i> تبديل الاتجاه</button>
+                        <button class="btn-action gold" onclick="openTeacherModal()"><i class="fa-solid fa-user-plus"></i> إضافة معلم جديد</button>
+                        <button class="btn-action" onclick="exportTeachersCSV()"><i class="fa-solid fa-download"></i> تصدير بيانات المعلمين (CSV)</button>
+                    </div>
+                    <span style="color: var(--text-muted); font-size: 0.9rem;">بيانات الكادر والمؤهل وموقف الندب قابلة للإضافة والتعديل التلقائي</span>
+                </div>
+                <div class="table-responsive">
+                    <table class="official-table" id="teachersRegistryTable">
+                        <thead>
+                            <tr>
+                                <th style="width: 9%;">الكود</th>
+                                <th style="width: 16%;">الاسم رباعي</th>
+                                <th style="width: 13%;">الرقم القومي</th>
+                                <th style="width: 14%;">الوظيفة على الكادر</th>
+                                <th style="width: 15%;">المؤهل الدراسي</th>
+                                <th style="width: 13%;">المادة المسندة</th>
+                                <th style="width: 12%;">موقف الندب</th>
+                                <th class="no-print" style="width: 8%;">الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="teachersRegistryBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- التبويب 6: سجل متابعة وتقييم المعلمين بالرصد التلقائي للدرجات -->
+            <div id="tabSupervisionEvaluation" class="tab-content">
+                <div class="table-toolbar">
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <button class="btn-action" onclick="printActiveRecord('سجل متابعة وتقييم المعلم المشرف للمعلمين في ضوء المعايير الرسمية والتوجيه الفني')"><i class="fa-solid fa-print"></i> طباعة استمارة التقييمات A4</button>
+                        <button class="btn-action secondary" onclick="togglePrintOrientation()"><i class="fa-solid fa-rotate"></i> تبديل الاتجاه</button>
+                        <button class="btn-action gold" onclick="openEvalModal()"><i class="fa-solid fa-plus"></i> رصد تقييم جديد بنظام الدرجات التلقائي</button>
+                        <button class="btn-action" onclick="exportEvaluationsCSV()"><i class="fa-solid fa-download"></i> تصدير التقييمات (CSV)</button>
+                    </div>
+                    <span style="color: var(--accent); font-weight: bold;">بنود التقييم كاملة من واقع دفاتر التوجيه الفني مع حساب المجموع والتقدير تلقائياً</span>
+                </div>
+                <div class="table-responsive">
+                    <table class="official-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 3%;">م</th>
+                                <th style="width: 14%;">اسم المعلم</th>
+                                <th style="width: 8%;">التاريخ</th>
+                                <th style="width: 8%;">طابور وانضباط (10)</th>
+                                <th style="width: 8%;">الجدول والمنهج (10)</th>
+                                <th style="width: 8%;">كشكول التحضير (10)</th>
+                                <th style="width: 8%;">التقييمات وكشاكيل الطلاب (10)</th>
+                                <th style="width: 8%;">الشرح والتفاعل (10)</th>
+                                <th style="width: 8%;">الأنشطة والسبورة (10)</th>
+                                <th style="width: 7%;">المجموع (60)</th>
+                                <th style="width: 8%;">التقدير</th>
+                                <th style="width: 12%;">التوجيهات والملاحظات</th>
+                                <th class="no-print" style="width: 6%;">الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="evaluationTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- التبويب 7: سجل توقيعات المعلمين بالعلم واستلام الجدول -->
+            <div id="tabSignatures" class="tab-content">
+                <div class="table-toolbar">
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn-action" onclick="printActiveRecord('سجل توقيع السادة المعلمين بالعلم واستلام جدول الحصص والتكليفات المعتمد')"><i class="fa-solid fa-print"></i> طباعة كشف التوقيعات A4</button>
+                        <button class="btn-action secondary" onclick="togglePrintOrientation()"><i class="fa-solid fa-rotate"></i> تبديل الاتجاه</button>
+                        <button class="btn-action gold" onclick="exportSignaturesCSV()"><i class="fa-solid fa-file-excel"></i> تصدير الكشف (CSV)</button>
+                    </div>
+                    <span style="color: var(--text-muted); font-size: 0.9rem;">يتم التوقيع الإلكتروني وتأكيده تلقائياً فور استيفاء المعلم للنموذج من الواجهة</span>
+                </div>
+                <div class="table-responsive">
+                    <table class="official-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 4%;">م</th>
+                                <th style="width: 18%;">اسم المعلم</th>
+                                <th style="width: 14%;">الوظيفة على الكادر</th>
+                                <th style="width: 7%;">حصصنا</th>
+                                <th style="width: 25%;">الفصول المسندة بمدرستنا</th>
+                                <th style="width: 14%;">موقف الندب</th>
+                                <th style="width: 18%;">التوقيع بالعلم والاستلام</th>
+                            </tr>
+                        </thead>
+                        <tbody id="signaturesTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- التبويب 8: المزامنة السحابية والنسخ الاحتياطي الشامل -->
+            <div id="tabSyncSettings" class="tab-content">
+                <div class="commitments-panel" style="border-color: var(--primary);">
+                    <h4><i class="fa-solid fa-cloud-bolt"></i> إعدادات المزامنة الفورية مع Google Apps Script سحابياً</h4>
+                    <p style="color: var(--text-muted); margin-bottom: 15px; font-size: 0.95rem; line-height: 1.6;">
+                        تدعم المنظومة الحفظ التلقائي المزدوج فورياً داخل المتصفح، مع إمكانية المزامنة اللحظية مع جداول بيانات Google Sheets عبر كود نشر Webhook التالي:
+                    </p>
+                    <div class="form-group" style="margin-bottom: 20px;">
+                        <label for="gasWebhookUrl"><i class="fa-solid fa-link"></i> رابط Google Apps Script Web App URL:</label>
+                        <input type="url" id="gasWebhookUrl" class="form-control" placeholder="https://script.google.com/macros/s/.../exec">
+                    </div>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <button class="btn-action" onclick="saveWebhookUrl()"><i class="fa-solid fa-floppy-disk"></i> حفظ رابط المزامنة</button>
+                        <button class="btn-action gold" onclick="testCloudSync()"><i class="fa-solid fa-rotate"></i> اختبار المزامنة اللحظية</button>
+                        <button class="btn-action" onclick="exportBackupJson()"><i class="fa-solid fa-download"></i> تصدير قاعدة البيانات كاملة (JSON)</button>
+                        <label class="btn-action" style="margin: 0; cursor: pointer;">
+                            <i class="fa-solid fa-upload"></i> استيراد قاعدة بيانات كاملة (JSON)
+                            <input type="file" id="importJsonFile" accept=".json" style="display: none;" onchange="importBackupJson(event)">
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- تذييل الطباعة الرسمي المتكامل مع القيادات المعتمدة وخاتم النسر -->
+            <div class="print-official-signatures">
+                <div class="sig-col">
+                    <div>المعلم المشرف</div>
+                    <div class="sig-name">أ/ محمود محمد عبد الوهاب عيسى</div>
+                </div>
+                <div class="sig-col">
+                    <div>وكيل المدرسة</div>
+                    <div class="sig-name">أ/ عبدالحميد عثمان عيد</div>
+                </div>
+                <div class="sig-col">
+                    <div class="seal-box">
+                        موضع خاتم المدرسة الرسمي
+                    </div>
+                </div>
+                <div class="sig-col">
+                    <div>يعتمد ،، القائم بأعمال مدير المدرسة</div>
+                    <div class="sig-name">أ/ مسعود مخيمر</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- نافذة إضافة وتعديل المعلم (Modal) -->
+    <div id="teacherModal" class="crud-modal">
+        <div class="crud-card">
+            <h3 id="teacherModalTitle"><i class="fa-solid fa-user-pen"></i> إضافة / تعديل بيانات المعلم</h3>
+            <input type="hidden" id="modalTeacherOriginalCode">
+            <div class="form-grid" style="grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
+                <div class="form-group">
+                    <label>كود المعلم:</label>
+                    <input type="text" id="modalTeacherCode" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>اسم المعلم رباعي:</label>
+                    <input type="text" id="modalTeacherName" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>الرقم القومي:</label>
+                    <input type="text" id="modalTeacherNationalId" class="form-control" maxlength="14" required>
+                </div>
+                <div class="form-group">
+                    <label>الوظيفة على الكادر:</label>
+                    <input type="text" id="modalTeacherJob" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>المؤهل الدراسي:</label>
+                    <input type="text" id="modalTeacherQual" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>المادة المسندة:</label>
+                    <input type="text" id="modalTeacherSubject" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>رقم الهاتف:</label>
+                    <input type="tel" id="modalTeacherPhone" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>حصص مدرستنا المسندة:</label>
+                    <input type="number" id="modalTeacherQuotaHours" class="form-control" required>
+                </div>
+            </div>
+            <div class="form-group" style="margin-bottom: 20px;">
+                <label>موقف الانتداب وحصص المدرسة المنتدب إليها:</label>
+                <input type="text" id="modalTeacherMandateNote" class="form-control" placeholder="مثال: منتدبة لاستكمال النصاب (12 حصة بمدرستها الابتدائية)">
+            </div>
+            <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                <button class="btn-action gold" onclick="saveTeacherFromModal()"><i class="fa-solid fa-check"></i> حفظ التغييرات</button>
+                <button class="btn-action danger" onclick="closeTeacherModal()">إلغاء</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة إضافة وتعديل نصاب الحصص (Modal) -->
+    <div id="quotaModal" class="crud-modal">
+        <div class="crud-card">
+            <h3 id="quotaModalTitle"><i class="fa-solid fa-pen-ruler"></i> تعديل بيان توزيع الحصص والانتداب</h3>
+            <input type="hidden" id="modalQuotaIndex">
+            <div class="form-group" style="margin-bottom: 15px;">
+                <label>اسم المعلم والصفة:</label>
+                <input type="text" id="modalQuotaName" class="form-control" required>
+            </div>
+            <div class="form-group" style="margin-bottom: 15px;">
+                <label>المادة / الصف / الفصول المسندة بمدرستنا بالتفصيل:</label>
+                <textarea id="modalQuotaClasses" class="form-control" rows="3" required></textarea>
+            </div>
+            <div class="form-grid" style="grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 15px;">
+                <div class="form-group">
+                    <label>عدد فصولنا:</label>
+                    <input type="number" id="modalQuotaClassesCount" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>حصص مدرستنا:</label>
+                    <input type="number" id="modalQuotaAssigned" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>النصاب الرسمي:</label>
+                    <input type="text" id="modalQuotaOfficialTarget" class="form-control" placeholder="14 أو -" required>
+                </div>
+            </div>
+            <div class="form-group" style="margin-bottom: 15px;">
+                <label>موقف الانتداب والمدارس الأخرى (يظهر بلون مميز):</label>
+                <input type="text" id="modalQuotaMandateInfo" class="form-control" placeholder="مثال: منتدبة من التعليم الابتدائي ومسند لها 12 حصة بمدرستها الأصلية">
+            </div>
+            <div class="form-group" style="margin-bottom: 20px;">
+                <label>البيان / الملاحظات (تغطية عجز، زيادة، ...):</label>
+                <input type="text" id="modalQuotaNote" class="form-control">
+            </div>
+            <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                <button class="btn-action gold" onclick="saveQuotaFromModal()"><i class="fa-solid fa-check"></i> حفظ البيان</button>
+                <button class="btn-action danger" onclick="closeQuotaModal()">إلغاء</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة تعديل حصة في الجدول العام المجمع (Modal) -->
+    <div id="cellEditModal" class="crud-modal">
+        <div class="crud-card" style="max-width: 450px;">
+            <h3><i class="fa-solid fa-chalkboard-user"></i> تعديل تفاصيل الحصة</h3>
+            <input type="hidden" id="cellEditDayIndex">
+            <input type="hidden" id="cellEditPeriodKey">
+            <div class="form-group" style="margin-bottom: 15px;">
+                <label>اليوم والحصة:</label>
+                <input type="text" id="cellEditDayPeriodName" class="form-control" readonly>
+            </div>
+            <div class="form-group" style="margin-bottom: 15px;">
+                <label>الفصل والمادة:</label>
+                <input type="text" id="cellEditClassSubject" class="form-control" placeholder="مثال: 1/1 (برمجة)" required>
+            </div>
+            <div class="form-group" style="margin-bottom: 20px;">
+                <label>المعلم المسند إليه:</label>
+                <input type="text" id="cellEditTeacherName" class="form-control" placeholder="مثال: أ/ محمود عيسى" required>
+            </div>
+            <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                <button class="btn-action gold" onclick="saveCellEdit()"><i class="fa-solid fa-check"></i> حفظ الحصة</button>
+                <button class="btn-action danger" onclick="closeCellEditModal()">إلغاء</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة رصد التقييم الإشرافي التلقائي الشامل (Modal) -->
+    <div id="evalModal" class="crud-modal">
+        <div class="crud-card">
+            <h3 id="evalModalTitle"><i class="fa-solid fa-star"></i> رصد تقييم المعلم المشرف (حساب ورصد درجات تلقائي)</h3>
+            <input type="hidden" id="modalEvalId">
+            <div class="form-grid" style="grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                <div class="form-group">
+                    <label>اسم المعلم:</label>
+                    <input type="text" id="modalEvalTeacherName" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>تاريخ الزيارة الإشرافية:</label>
+                    <input type="date" id="modalEvalDate" class="form-control" required>
+                </div>
+            </div>
+
+            <div class="eval-criteria-grid">
+                <div class="eval-item-box">
+                    <label>1. انتظام الطابور والمظهر والانضباط المدرسي:</label>
+                    <select id="evalItem1" onchange="autoCalculateEvalScore()">
+                        <option value="10">ممتاز (10 درجات) - التزام كامل وقدوة حسنة</option>
+                        <option value="8">جيد جداً (8 درجات) - التزام مناسب</option>
+                        <option value="6">جيد (6 درجات) - يحتاج لمزيد من الانضباط</option>
+                        <option value="4">مقبول (4 درجات) - تنبيه بالتأخير</option>
+                    </select>
+                </div>
+
+                <div class="eval-item-box">
+                    <label>2. استلام الجدول والتواجد بالفصول وتوزيع المنهج:</label>
+                    <select id="evalItem2" onchange="autoCalculateEvalScore()">
+                        <option value="10">ممتاز (10 درجات) - تواجد مستمر وتوزيع معتمد</option>
+                        <option value="8">جيد جداً (8 درجات) - ملتزم بالجدول والمنهج</option>
+                        <option value="6">جيد (6 درجات) - تأخر يسير عن المنهج</option>
+                        <option value="4">مقبول (4 درجات) - عدم الالتزام بتوزيع المنهج</option>
+                    </select>
+                </div>
+
+                <div class="eval-item-box">
+                    <label>3. كشكول التحضير (مستوفٍ، مرقم ومختوم):</label>
+                    <select id="evalItem3" onchange="autoCalculateEvalScore()">
+                        <option value="10">ممتاز (10 درجات) - تحضير نموذجي ومختوم ومرقم</option>
+                        <option value="8">جيد جداً (8 درجات) - مستوفٍ مع ترقيم وختم</option>
+                        <option value="6">جيد (6 درجات) - يحتاج لاستكمال الختم أو الترقيم</option>
+                        <option value="4">مقبول (4 درجات) - نقص في صياغة الأهداف</option>
+                    </select>
+                </div>
+
+                <div class="eval-item-box">
+                    <label>4. سجل الدرجات والتقييمات الأسبوعية وتصحيح الكشاكيل:</label>
+                    <select id="evalItem4" onchange="autoCalculateEvalScore()">
+                        <option value="10">ممتاز (10 درجات) - رصد دوري وتصحيح أولاً بأول</option>
+                        <option value="8">جيد جداً (8 درجات) - رصد منتظم للتقييمات</option>
+                        <option value="6">جيد (6 درجات) - تصحيح متأخر لبعض الكشاكيل</option>
+                        <option value="4">مقبول (4 درجات) - إهمال في رصد التقييم الأسبوعي</option>
+                    </select>
+                </div>
+
+                <div class="eval-item-box">
+                    <label>5. مدى وصول المعلم للشرح وتفاعل الطلاب واستراتيجيات التدريس:</label>
+                    <select id="evalItem5" onchange="autoCalculateEvalScore()">
+                        <option value="10">ممتاز (10 درجات) - شرح رائع وتفاعل طلابي مبهر</option>
+                        <option value="8">جيد جداً (8 درجات) - استراتيجيات تدريس ملائمة</option>
+                        <option value="6">جيد (6 درجات) - أسلوب تقليدي مع تفاعل متوسط</option>
+                        <option value="4">مقبول (4 درجات) - ضعف في جذب انتباه الطلاب</option>
+                    </select>
+                </div>
+
+                <div class="eval-item-box">
+                    <label>6. كشف الطلاب الخاص والأنشطة وتوظيف المعمل والسبورة:</label>
+                    <select id="evalItem6" onchange="autoCalculateEvalScore()">
+                        <option value="10">ممتاز (10 درجات) - تفعيل كامل للمعمل والسبورة الذكية</option>
+                        <option value="8">جيد جداً (8 درجات) - توظيف مناسب للتقنيات والأنشطة</option>
+                        <option value="6">جيد (6 درجات) - استخدام محدود للسبورة الذكية</option>
+                        <option value="4">مقبول (4 درجات) - عدم تفعيل الأنشطة العملية</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- عرض الحساب التلقائي للدرجات -->
+            <div style="background: rgba(0,229,255,0.1); border: 1.5px solid var(--primary); border-radius: 12px; padding: 15px; margin-bottom: 20px; display: flex; justify-content: space-around; align-items: center; text-align: center;">
+                <div>
+                    <span style="font-size: 0.9rem; color: var(--text-muted);">المجموع الكلي:</span>
+                    <h3 id="displayAutoScore" style="color: var(--primary); font-size: 1.8rem; margin: 0;">60 / 60</h3>
+                </div>
+                <div>
+                    <span style="font-size: 0.9rem; color: var(--text-muted);">التقدير العام المستحق:</span>
+                    <h3 id="displayAutoRating" style="color: var(--accent); font-size: 1.8rem; margin: 0;">ممتاز مرتفع</h3>
+                </div>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 20px;">
+                <label>التوجيهات والملاحظات الإشرافية والتوصيات:</label>
+                <textarea id="modalEvalNotes" class="form-control" rows="2"></textarea>
+            </div>
+            <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                <button class="btn-action gold" onclick="saveEvalFromModal()"><i class="fa-solid fa-check"></i> حفظ التقييم والرصد</button>
+                <button class="btn-action danger" onclick="closeEvalModal()">إلغاء</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة تعديل بيانات إقرار المعلم المدخلة (Modal) -->
+    <div id="subModal" class="crud-modal">
+        <div class="crud-card">
+            <h3><i class="fa-solid fa-pen-to-square"></i> تعديل بيانات الإقرار المسجل</h3>
+            <input type="hidden" id="modalSubId">
+            <div class="form-grid" style="grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px;">
+                <div class="form-group">
+                    <label>كود المعلم:</label>
+                    <input type="text" id="modalSubCode" class="form-control" readonly>
+                </div>
+                <div class="form-group">
+                    <label>اسم المعلم:</label>
+                    <input type="text" id="modalSubName" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>المادة المسندة:</label>
+                    <input type="text" id="modalSubSubject" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>رقم الهاتف:</label>
+                    <input type="tel" id="modalSubPhone" class="form-control" required>
+                </div>
+            </div>
+            <div class="form-group" style="margin-bottom: 12px;">
+                <label>موقف دفتر التحضير (مختوم ومرقم):</label>
+                <input type="text" id="modalSubPrep" class="form-control" required>
+            </div>
+            <div class="form-group" style="margin-bottom: 12px;">
+                <label>موقف سجل الدرجات والتقييمات:</label>
+                <input type="text" id="modalSubGrade" class="form-control" required>
+            </div>
+            <div class="form-group" style="margin-bottom: 20px;">
+                <label>استلام الجدول المدرسي والتوقيع بالعلم:</label>
+                <input type="text" id="modalSubTable" class="form-control" required>
+            </div>
+            <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                <button class="btn-action gold" onclick="saveSubFromModal()"><i class="fa-solid fa-check"></i> حفظ التعديل</button>
+                <button class="btn-action danger" onclick="closeSubModal()">إلغاء</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- =========================================================
+       FOOTER PROFESSIONALLY CENTERED - SOVEREIGN EAGLE 
+       (Color scheme updated to bright Cyan & Blue as requested)
+       ========================================================= -->
+    <div class="footer-wrapper">
+        <div class="circle-container">
+            <svg viewBox="0 0 500 500" class="rotating-svg">
+                <defs><path id="textCirclePath" d="M 250, 440 A 190,190 0 1,1 250,60 A 190,190 0 1,1 250,440" /></defs>
+                <circle cx="250" cy="250" r="215" fill="none" stroke="rgba(0, 229, 255, 0.3)" stroke-width="4" />
+                <circle cx="250" cy="250" r="165" fill="none" stroke="rgba(0, 229, 255, 0.3)" stroke-width="4" />
+                <text><textPath href="#textCirclePath" startOffset="50%" text-anchor="middle" class="text-path-style">
+                    ALL RIGHTS RESERVED ®© DESIGNED & DEVELOPED BY <tspan class="name-highlight">MAHMOUD MOHAMED</tspan>
+                </textPath></text>
+            </svg>
+            <div class="center-prayer">
+                <span>ولا تنسونا من خالص دعائكم بظهر الغيب</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- نظام الجافاسكريبت المطور المتكامل لإدارة البيانات والطباعة والمزامنة -->
+    <script>
+        // رابط المزامنة الافتراضي المحفوظ تلقائياً
+        const DEFAULT_GAS_URL = "https://script.google.com/macros/s/AKfycbxtJuzb81NV3y2Mu2wudKKwgFDByDXdQBJ-523NlPVH_E_3pkApS0i2TEDmHZPhbalt/exec";
+
+        // دالة تشغيل نغمة الاحتفال الرقمية المتطورة
+        function playSuccessChime() {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const now = ctx.currentTime;
+                
+                const osc1 = ctx.createOscillator();
+                const gain1 = ctx.createGain();
+                osc1.type = 'sine';
+                osc1.frequency.setValueAtTime(523.25, now);
+                osc1.frequency.exponentialRampToValueAtTime(783.99, now + 0.15);
+                gain1.gain.setValueAtTime(0.2, now);
+                gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+                osc1.connect(gain1);
+                gain1.connect(ctx.destination);
+                osc1.start(now);
+                osc1.stop(now + 0.5);
+
+                const osc2 = ctx.createOscillator();
+                const gain2 = ctx.createGain();
+                osc2.type = 'triangle';
+                osc2.frequency.setValueAtTime(659.25, now + 0.15);
+                osc2.frequency.exponentialRampToValueAtTime(1046.50, now + 0.35);
+                gain2.gain.setValueAtTime(0.25, now + 0.15);
+                gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.7);
+                osc2.connect(gain2);
+                gain2.connect(ctx.destination);
+                osc2.start(now + 0.15);
+                osc2.stop(now + 0.7);
+            } catch (e) {
+                console.log("Audio not allowed before user interaction");
+            }
+        }
+
+        // قاعدة بيانات المعلمين الافتراضية
+        const defaultTeachers = {
+            "1099013298": { code: "1099013298", name: "آمال إبراهيم محمد حامد", nationalId: "30201121203943", jobTitle: "معلمة خدمات (برمجة وحاسب آلي)", qualification: "بكالوريوس تربية نوعية (شعبة تكنولوجيا التعليم)", subject: "برمجة وحاسب آلي + ثقافة مالية (فصول الخدمات)", phone: "01099013298", quotaHours: 12, mandateNote: "معلمة خدمات - حصص المعلم س كاملة (12 حصة بمدرستنا)", classes: [{ title: "برمجة - الثاني الثانوي خدمات", details: "فصل (7/2) - (1 فصل × 6 حصص)", hours: 6 }, { title: "ثقافة مالية - الثاني الثانوي خدمات", details: "فصل (7/2) - (1 فصل × 2 حصة)", hours: 2 }, { title: "برمجة - الأول الثانوي خدمات", details: "فصل (8/1) - (1 فصل × 4 حصص)", hours: 4 }] },
+            "2589631": { code: "2589631", name: "محمود محمد عبد الوهاب عيسى", nationalId: "28801011200000", jobTitle: "أستاذ البرمجة والذكاء الاصطناعي (المعلم المشرف)", qualification: "بكالوريوس نوعية / حاسب آلي ونظم", subject: "برمجة وذكاء اصطناعي + ثقافة مالية", phone: "01000000000", quotaHours: 16, mandateNote: "معلم أساسي بالمدرسة (المسند 16 حصة - النصاب 14 - زيادة حصتين +2)", classes: [{ title: "ثقافة مالية - الثاني الثانوي", details: "فصل (1/2) - (1 فصل × 2 حصة)", hours: 2 }, { title: "برمجة - الثاني الثانوي منتظم", details: "فصل (6/2) - (1 فصل × 6 حصص)", hours: 6 }, { title: "برمجة - الأول الثانوي منتظم", details: "فصول (1/1 ، 6/1) - (2 فصل × 4 حصص = 8 حصص)", hours: 8 }] },
+            "1452369": { code: "1452369", name: "منى جلال السيد هيكل", nationalId: "28503141200000", jobTitle: "معلم أول إعدادي", qualification: "بكالوريوس تربية / تخصص تكنولوجيا", subject: "برمجة وأولى ثانوي + ثقافة مالية", phone: "01020000000", quotaHours: 14, mandateNote: "منتدبة جزئياً من التعليم الإعدادي (مسند لها 5 حصص بمدرستها الإعدادية الأصلية)", classes: [{ title: "ثقافة مالية - الثاني الثانوي", details: "فصل (2/2) - (1 فصل × 2 حصة)", hours: 2 }, { title: "برمجة - الأول الثانوي منتظم", details: "فصول (2/1 ، 4/1 ، 5/1) - (3 فصول × 4 حصص = 12 حصة)", hours: 12 }] },
+            "1785412": { code: "1785412", name: "مروة محمد السيد عامر", nationalId: "29007201200000", jobTitle: "معلم أول أ ابتدائي", qualification: "بكالوريوس تكنولوجيا التعليم", subject: "برمجة وذكاء اصطناعي - الأول الثانوي منتظم", phone: "01030000000", quotaHours: 8, mandateNote: "منتدبة جزئياً من التعليم الابتدائي (مسند لها 12 حصة بمدرستها الابتدائية الأصلية)", classes: [{ title: "برمجة - الأول الثانوي منتظم", details: "فصول (3/1 ، 7/1) - (2 فصل × 4 حصص = 8 حصص)", hours: 8 }] },
+            "1369852": { code: "1369852", name: "منى العيوطي", nationalId: "28609181200000", jobTitle: "معلم", qualification: "مؤهل عالي مناسب", subject: "ثقافة مالية - الثاني الثانوي", phone: "01040000000", quotaHours: 4, mandateNote: "تغطية عجز بمدرستنا (المسند 4 حصص)", classes: [{ title: "ثقافة مالية - الثاني الثانوي", details: "فصول (6/2 ، 3/2) - (2 فصل × 2 حصة = 4 حصص)", hours: 4 }] },
+            "1954123": { code: "1954123", name: "السيدة عطا", nationalId: "28711251200000", jobTitle: "معلم", qualification: "مؤهل عالي مناسب", subject: "ثقافة مالية - الثاني الثانوي", phone: "01050000000", quotaHours: 4, mandateNote: "تغطية عجز بمدرستنا (المسند 4 حصص)", classes: [{ title: "ثقافة مالية - الثاني الثانوي", details: "فصول (4/2 ، 5/2) - (2 فصل × 2 حصة = 4 حصص)", hours: 4 }] }
+        };
+
+        const defaultQuotaPlan = [
+            { name: "أ/ منى العيوطي", roleNote: "معلم", classesDesc: "ثقافة مالية - الثاني الثانوي (فصل 6/2 ، 3/2) (2 فصل × 2 حصة)", classesCount: 2, assignedHours: 4, officialTarget: "-", mandateInfo: "تغطية عجز بمدرستنا فقط (لا يوجد ندب خارجي)", statement: "تغطية العجز" },
+            { name: "أ/ السيدة عطا", roleNote: "معلم", classesDesc: "ثقافة مالية - الثاني الثانوي (فصول 4/2 ، 5/2) (2 فصل × 2 حصة)", classesCount: 2, assignedHours: 4, officialTarget: "-", mandateInfo: "تغطية عجز بمدرستنا فقط (لا يوجد ندب خارجي)", statement: "تغطية العجز" },
+            { name: "أ/ مروة محمد السيد عامر", roleNote: "معلم أول أ ابتدائي", classesDesc: "برمجة - الأول الثانوي منتظم (فصول 3/1 ، 7/1) (2 فصل × 4 حصص)", classesCount: 2, assignedHours: 8, officialTarget: "20", mandateInfo: "منتدبة من التعليم الابتدائي | لديها 12 حصة بمدرستها الابتدائية الأصلية لاستكمال نصابها (20 حصة)", statement: "أقل بـ 12 حصة بمدرستنا" },
+            { name: "أ/ منى جلال السيد هيكل", roleNote: "معلم أول إعدادي", classesDesc: "ثقافة مالية - الثاني الثانوي (فصل 2/2) (1 فصل × 2 حصة) + برمجة - الأول الثانوي منتظم (فصول 2/1 ، 4/1 ، 5/1) (3 فصول × 4 حصص = 12 حصة)", classesCount: 4, assignedHours: 14, officialTarget: "19", mandateInfo: "منتدبة من التعليم الإعدادي | لديها 5 حصص بمدرستها الإعدادية الأصلية لاستكمال نصابها (19 حصة)", statement: "أقل بـ 5 حصص بمدرستنا" },
+            { name: "أ/ محمود محمد عبد الوهاب عيسى", roleNote: "أستاذ البرمجة والمعلم المشرف", classesDesc: "ثقافة مالية - الثاني الثانوي (فصل 1/2) (1 فصل × 2 حصة) + برمجة - الثاني الثانوي منتظم (فصل 6/2) (1 فصل × 6 حصص) + برمجة - الأول الثانوي منتظم (فصول 1/1 ، 6/1) (2 فصل × 4 حصص = 8 حصص)", classesCount: 4, assignedHours: 16, officialTarget: "14", mandateInfo: "معلم أساسي بمدرسة محمد هاشم النقيب الثانوية (زيادة حصتين +2 عن النصاب)", statement: "زيادة حصتين (+2)" },
+            { name: "أ/ آمال إبراهيم محمد حامد", roleNote: "معلمة خدمات - حصص المعلم س كاملة", classesDesc: "برمجة - الثاني الثانوي خدمات (فصل 7/2) (1 فصل × 6 حصص) + ثقافة مالية - الثاني الثانوي خدمات (فصل 7/2) (1 فصل × 2 حصة) + برمجة - الأول الثانوي خدمات (فصل 8/1) (1 فصل × 4 حصص)", classesCount: 3, assignedHours: 12, officialTarget: "-", mandateInfo: "مكلفة بفصول الخدمات (المعلم س سابقاً) بمجموع 12 حصة كاملة بمدرستنا", statement: "تغطية العجز كاملة (12 حصة)" }
+        ];
+
+        const defaultMasterSchedule = [
+            { day: "الأحد", p1: { c: "1/1 (برمجة)", t: "أ/ محمود عيسى" }, p2: { c: "1/1 (برمجة)", t: "أ/ محمود عيسى" }, p3: { c: "2/1 (برمجة)", t: "أ/ منى هيكل" }, p4: { c: "3/1 (برمجة)", t: "أ/ مروة عامر" }, p5: { c: "6/2 (ث. مالية)", t: "أ/ منى العيوطي" }, p6: { c: "7/2 خدمات", t: "أ/ آمال حامد" }, p7: { c: "7/2 خدمات", t: "أ/ آمال حامد" } },
+            { day: "الإثنين", p1: { c: "6/1 (برمجة)", t: "أ/ محمود عيسى" }, p2: { c: "6/1 (برمجة)", t: "أ/ محمود عيسى" }, p3: { c: "4/1 (برمجة)", t: "أ/ منى هيكل" }, p4: { c: "7/1 (برمجة)", t: "أ/ مروة عامر" }, p5: { c: "4/2 (ث. مالية)", t: "أ/ السيدة عطا" }, p6: { c: "8/1 خدمات", t: "أ/ آمال حامد" }, p7: { c: "8/1 خدمات", t: "أ/ آمال حامد" } },
+            { day: "الثلاثاء", p1: { c: "6/2 (برمجة)", t: "أ/ محمود عيسى" }, p2: { c: "6/2 (برمجة)", t: "أ/ محمود عيسى" }, p3: { c: "6/2 (برمجة)", t: "أ/ محمود عيسى" }, p4: { c: "5/1 (برمجة)", t: "أ/ منى هيكل" }, p5: { c: "2/2 (ث. مالية)", t: "أ/ منى هيكل" }, p6: { c: "3/2 (ث. مالية)", t: "أ/ منى العيوطي" }, p7: { c: "7/2 خدمات", t: "أ/ آمال حامد" } },
+            { day: "الأربعاء", p1: { c: "6/2 (برمجة)", t: "أ/ محمود عيسى" }, p2: { c: "6/2 (برمجة)", t: "أ/ محمود عيسى" }, p3: { c: "6/2 (برمجة)", t: "أ/ محمود عيسى" }, p4: { c: "2/1 (برمجة)", t: "أ/ منى هيكل" }, p5: { c: "3/1 (برمجة)", t: "أ/ مروة عامر" }, p6: { c: "5/2 (ث. مالية)", t: "أ/ السيدة عطا" }, p7: { c: "7/2 خدمات", t: "أ/ آمال حامد" } },
+            { day: "الخميس", p1: { c: "1/2 (ث. مالية)", t: "أ/ محمود عيسى" }, p2: { c: "1/2 (ث. مالية)", t: "أ/ محمود عيسى" }, p3: { c: "4/1 (برمجة)", t: "أ/ منى هيكل" }, p4: { c: "5/1 (برمجة)", t: "أ/ منى هيكل" }, p5: { c: "7/1 (برمجة)", t: "أ/ مروة عامر" }, p6: { c: "8/1 خدمات", t: "أ/ آمال حامد" }, p7: { c: "8/1 خدمات", t: "أ/ آمال حامد" } }
+        ];
+
+        let defaultEvaluations = [
+            { id: 1, name: "آمال إبراهيم محمد حامد", date: "2026-09-20", item1: 10, item2: 10, item3: 10, item4: 10, item5: 10, item6: 10, total: 60, rating: "ممتاز مرتفع", notes: "أداء متميز والتزام تام بجدول الخدمات والتحضير مكتمل ومرقم ومختوم." },
+            { id: 2, name: "منى جلال السيد هيكل", date: "2026-09-21", item1: 10, item2: 10, item3: 10, item4: 8, item5: 10, item6: 8, total: 56, rating: "ممتاز", notes: "جهد مشكور واستيفاء لكراسات الطلاب وتفعيل استراتيجيات التعلم النشط." },
+            { id: 3, name: "مروة محمد السيد عامر", date: "2026-09-22", item1: 10, item2: 8, item3: 10, item4: 8, item5: 10, item6: 10, total: 56, rating: "ممتاز", notes: "تفعيل متميز لمعمل الحاسب الآلي والسبورة التفاعلية مع فصول أولى ثانوي." }
+        ];
+
+        function getTeachersData() { return JSON.parse(localStorage.getItem("mhn_teachers")) || defaultTeachers; }
+        function saveTeachersData(data) { localStorage.setItem("mhn_teachers", JSON.stringify(data)); }
+        function getQuotaData() { return JSON.parse(localStorage.getItem("mhn_quota_plan")) || defaultQuotaPlan; }
+        function saveQuotaData(data) { localStorage.setItem("mhn_quota_plan", JSON.stringify(data)); }
+        function getMasterSchedule() { return JSON.parse(localStorage.getItem("mhn_master_schedule")) || defaultMasterSchedule; }
+        function saveMasterSchedule(data) { localStorage.setItem("mhn_master_schedule", JSON.stringify(data)); }
+
+        function initAppStorage() {
+            if (!localStorage.getItem("mhn_gas_webhook")) {
+                localStorage.setItem("mhn_gas_webhook", DEFAULT_GAS_URL);
+            }
+            if (!localStorage.getItem("mhn_teachers")) saveTeachersData(defaultTeachers);
+            if (!localStorage.getItem("mhn_quota_plan")) saveQuotaData(defaultQuotaPlan);
+            if (!localStorage.getItem("mhn_master_schedule")) saveMasterSchedule(defaultMasterSchedule);
+            if (!localStorage.getItem("mhn_submissions")) localStorage.setItem("mhn_submissions", JSON.stringify([]));
+            if (!localStorage.getItem("mhn_evaluations")) localStorage.setItem("mhn_evaluations", JSON.stringify(defaultEvaluations));
+
+            populateSelectTeacherDropdown();
+            populateIndividualTeacherDropdown();
+            renderTeachersRegistry();
+            renderQuotaTable();
+            renderMasterTimetable();
+            renderSignaturesTable();
+            renderSubmissionsTable();
+            renderEvaluationsTable();
+            updateStatistics();
+            document.getElementById("printDateSpan").innerText = new Date().toLocaleDateString('ar-EG');
+        }
+
+        function populateSelectTeacherDropdown() {
+            const teachers = getTeachersData();
+            const select = document.getElementById("searchTeacherSelect");
+            select.innerHTML = `<option value="">-- اضغط لاختيار اسم المعلم --</option>`;
+            Object.values(teachers).forEach(t => {
+                const opt = document.createElement("option");
+                opt.value = t.code;
+                opt.innerText = `${t.name} (${t.quotaHours} حصة بمدرستنا)`;
+                select.appendChild(opt);
+            });
+        }
+
+        function populateIndividualTeacherDropdown() {
+            const teachers = getTeachersData();
+            const select = document.getElementById("individualTeacherSelect");
+            select.innerHTML = "";
+            Object.values(teachers).forEach((t) => {
+                const opt = document.createElement("option");
+                opt.value = t.code;
+                opt.innerText = `${t.name} (${t.quotaHours} حصة)`;
+                select.appendChild(opt);
+            });
+            if (Object.keys(teachers).length > 0) renderIndividualSchedule(Object.keys(teachers)[0]);
+        }
+
+        function autoFillBySelect(code) {
+            if (!code) { clearFormFields(); return; }
+            document.getElementById("teacherCode").value = code;
+            autoFillByCode(code);
+        }
+
+        function autoFillByCode(code) {
+            code = code.trim();
+            const teachers = getTeachersData();
+            const teacher = teachers[code];
+            if (teacher) {
+                document.getElementById("teacherName").value = teacher.name;
+                document.getElementById("nationalId").value = teacher.nationalId;
+                document.getElementById("teacherJobTitle").value = teacher.jobTitle;
+                document.getElementById("teacherSubject").value = teacher.subject;
+                document.getElementById("teacherPhone").value = teacher.phone;
+                document.getElementById("quotaSummary").value = `${teacher.quotaHours} حصة بمدرستنا | ${teacher.mandateNote || ''}`;
+
+                const badgesContainer = document.getElementById("quotaBadgesList");
+                badgesContainer.innerHTML = "";
+                if (teacher.classes && teacher.classes.length > 0) {
+                    teacher.classes.forEach(c => {
+                        const chip = document.createElement("span");
+                        chip.className = "quota-chip";
+                        chip.innerHTML = `<i class="fa-solid fa-check-circle" style="color:var(--primary);"></i> ${c.title} : <b>${c.details}</b>`;
+                        badgesContainer.appendChild(chip);
+                    });
+                    if (teacher.mandateNote) {
+                        const mChip = document.createElement("span");
+                        mChip.className = "mandate-badge";
+                        mChip.innerHTML = `<i class="fa-solid fa-school-flag"></i> ${teacher.mandateNote}`;
+                        badgesContainer.appendChild(mChip);
+                    }
+                    document.getElementById("classesCountBadge").innerHTML = `إجمالي الفصول: <b>${teacher.classes.length} فصول</b>`;
+                }
+            }
+        }
+
+        function clearFormFields() {
+            document.getElementById("teacherName").value = "";
+            document.getElementById("nationalId").value = "";
+            document.getElementById("teacherJobTitle").value = "";
+            document.getElementById("teacherSubject").value = "";
+            document.getElementById("teacherPhone").value = "";
+            document.getElementById("quotaSummary").value = "";
+            document.getElementById("quotaBadgesList").innerHTML = `<span style="color: var(--text-muted); font-size: 0.95rem;">يرجى اختيار المعلم لعرض الفصول والحصص التفصيلية فوراً.</span>`;
+            document.getElementById("classesCountBadge").innerHTML = `إجمالي الفصول: <b>-</b>`;
+        }
+
+        let latestSubmission = null;
+        async function handleFormSubmission(e) {
+            e.preventDefault();
+
+            const code = document.getElementById("teacherCode").value.trim();
+            const name = document.getElementById("teacherName").value.trim();
+            const nationalId = document.getElementById("nationalId").value.trim();
+            const jobTitle = document.getElementById("teacherJobTitle").value.trim();
+            const subject = document.getElementById("teacherSubject").value.trim();
+            const phone = document.getElementById("teacherPhone").value.trim();
+            const quota = document.getElementById("quotaSummary").value;
+
+            const prepBook = document.getElementById("prepBookCompleted").checked;
+            const gradeRecord = document.getElementById("gradeRecordCompleted").checked;
+            const timetable = document.getElementById("timetableReceived").checked;
+            const legalPledge = document.getElementById("legalPledgeCheck").checked;
+
+            if (!legalPledge) {
+                alert("يجب التأشير على التعهد الرسمي القانوني لإتمام الإرسال!");
+                return;
+            }
+
+            latestSubmission = {
+                id: Date.now(), code, name, nationalId, jobTitle, subject, phone, quota,
+                prepBook: prepBook ? "نعم - مختوم ومرقم" : "لا",
+                gradeRecord: gradeRecord ? "نعم - مختوم ومرقم" : "لا",
+                timetable: timetable ? "تم الاستلام والتوقيع بالعلم" : "لا",
+                legalPledge: "تم التعهد رسمياً",
+                timestamp: new Date().toLocaleString('ar-EG')
+            };
+
+            let submissions = JSON.parse(localStorage.getItem("mhn_submissions")) || [];
+            submissions = submissions.filter(s => s.code !== code);
+            submissions.push(latestSubmission);
+            localStorage.setItem("mhn_submissions", JSON.stringify(submissions));
+
+            // الإرسال السحابي
+            const gasUrl = localStorage.getItem("mhn_gas_webhook");
+            if (gasUrl) {
+                try {
+                    fetch(gasUrl, {
+                        method: "POST",
+                        mode: "no-cors",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(latestSubmission)
+                    }).catch(err => console.log("Silent cloud sync error:", err));
+                } catch (err) {
+                    console.warn("Cloud sync exception:", err);
+                }
+            }
+
+            renderSubmissionsTable();
+            renderSignaturesTable();
+            updateStatistics();
+
+            const detailsBox = document.getElementById("celebrationDetailsBox");
+            detailsBox.innerHTML = `
+                <div>اسم المعلم: <span>${name}</span></div>
+                <div>الوظيفة والتخصص: <span>${jobTitle}</span></div>
+                <div>المادة المسندة: <span>${subject}</span></div>
+                <div>دفتر التحضير: <span>${latestSubmission.prepBook}</span></div>
+                <div>سجل التقييمات: <span>${latestSubmission.gradeRecord}</span></div>
+                <div>تاريخ واعتماد الحفظ: <span>${latestSubmission.timestamp}</span></div>
+            `;
+
+            playSuccessChime();
+            document.getElementById("celebrationModal").classList.add("active");
+            document.getElementById("teacherEntryForm").reset();
+            clearFormFields();
+        }
+
+        function closeCelebrationModal() { document.getElementById("celebrationModal").classList.remove("active"); }
+
+        function printReceiptDirect() {
+            closeCelebrationModal();
+            printActiveRecord(`إيصال تعهد واستلام المعلم: ${latestSubmission ? latestSubmission.name : ''}`);
+        }
+
+        function openLoginDialog() {
+            document.getElementById("loginDialog").classList.add("active");
+            document.getElementById("adminPasswordInput").value = "";
+            document.getElementById("loginError").style.display = "none";
+            document.getElementById("adminPasswordInput").focus();
+        }
+        function closeLoginDialog() { document.getElementById("loginDialog").classList.remove("active"); }
+
+        function verifyAdminPassword() {
+            const pass = document.getElementById("adminPasswordInput").value.trim();
+            if (pass === "mrmahmoud2026") {
+                closeLoginDialog();
+                document.getElementById("adminModal").classList.add("active");
+                renderSubmissionsTable();
+                renderQuotaTable();
+                renderMasterTimetable();
+                renderTeachersRegistry();
+                renderSignaturesTable();
+                renderEvaluationsTable();
+                updateStatistics();
+            } else {
+                document.getElementById("loginError").style.display = "block";
+            }
+        }
+
+        function closeAdminModal() { document.getElementById("adminModal").classList.remove("active"); }
+
+        function switchAdminTab(tabId) {
+            document.querySelectorAll(".tab-content").forEach(el => el.classList.remove("active"));
+            document.querySelectorAll(".tab-btn").forEach(el => el.classList.remove("active"));
+            document.getElementById(tabId).classList.add("active");
+            event.currentTarget.classList.add("active");
+        }
+
+        /* 1. السجلات والتعهدات */
+        function renderSubmissionsTable() {
+            const submissions = JSON.parse(localStorage.getItem("mhn_submissions")) || [];
+            const tbody = document.getElementById("submissionsTableBody");
+            tbody.innerHTML = "";
+            if (submissions.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="9" style="padding: 25px; color: var(--text-muted);">لا توجد إقرارات مسجلة حتى الآن.</td></tr>`;
+                return;
+            }
+            submissions.forEach((item, index) => {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td><b>${item.code}</b></td>
+                    <td><b>${item.name}</b></td>
+                    <td>${item.subject}</td>
+                    <td><span class="quota-chip" style="background:rgba(16,185,129,0.15);">${item.prepBook}</span></td>
+                    <td><span class="quota-chip" style="background:rgba(16,185,129,0.15);">${item.gradeRecord}</span></td>
+                    <td><span class="quota-chip" style="background:rgba(0,229,255,0.15);">${item.timetable}</span></td>
+                    <td><span class="quota-chip" style="background:rgba(229,193,88,0.2); color:var(--accent);">${item.legalPledge}</span></td>
+                    <td class="no-print">
+                        <button class="btn-action gold" style="padding: 4px 8px; font-size: 0.78rem;" onclick="openEditSubModal(${item.id})"><i class="fa-solid fa-pen"></i></button>
+                        <button class="btn-action danger" style="padding: 4px 8px; font-size: 0.78rem;" onclick="deleteSubmission(${item.id})"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+        function openEditSubModal(id) {
+            const subs = JSON.parse(localStorage.getItem("mhn_submissions")) || [];
+            const item = subs.find(s => s.id === id);
+            if (!item) return;
+            document.getElementById("modalSubId").value = item.id;
+            document.getElementById("modalSubCode").value = item.code;
+            document.getElementById("modalSubName").value = item.name;
+            document.getElementById("modalSubSubject").value = item.subject;
+            document.getElementById("modalSubPhone").value = item.phone;
+            document.getElementById("modalSubPrep").value = item.prepBook;
+            document.getElementById("modalSubGrade").value = item.gradeRecord;
+            document.getElementById("modalSubTable").value = item.timetable;
+            document.getElementById("subModal").classList.add("active");
+        }
+        function closeSubModal() { document.getElementById("subModal").classList.remove("active"); }
+        function saveSubFromModal() {
+            const id = parseInt(document.getElementById("modalSubId").value);
+            let subs = JSON.parse(localStorage.getItem("mhn_submissions")) || [];
+            const item = subs.find(s => s.id === id);
+            if (item) {
+                item.name = document.getElementById("modalSubName").value;
+                item.subject = document.getElementById("modalSubSubject").value;
+                item.phone = document.getElementById("modalSubPhone").value;
+                item.prepBook = document.getElementById("modalSubPrep").value;
+                item.gradeRecord = document.getElementById("modalSubGrade").value;
+                item.timetable = document.getElementById("modalSubTable").value;
+                localStorage.setItem("mhn_submissions", JSON.stringify(subs));
+                closeSubModal();
+                renderSubmissionsTable();
+                renderSignaturesTable();
+            }
+        }
+        function deleteSubmission(id) {
+            if (confirm("هل تريد حذف هذا الإقرار نهائياً؟")) {
+                let submissions = JSON.parse(localStorage.getItem("mhn_submissions")) || [];
+                submissions = submissions.filter(s => s.id !== id);
+                localStorage.setItem("mhn_submissions", JSON.stringify(submissions));
+                renderSubmissionsTable();
+                renderSignaturesTable();
+                updateStatistics();
+            }
+        }
+
+        /* 2. توزيع الحصص والانتداب */
+        function renderQuotaTable() {
+            const quotaList = getQuotaData();
+            const tbody = document.getElementById("quotaTableBody");
+            tbody.innerHTML = "";
+            let totalClasses = 0, totalHours = 0;
+
+            quotaList.forEach((row, index) => {
+                totalClasses += parseInt(row.classesCount) || 0;
+                totalHours += parseInt(row.assignedHours) || 0;
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td><b>${row.name}</b><br><small style="color: var(--text-muted);">${row.roleNote || ''}</small></td>
+                    <td style="text-align: right; padding-right: 12px;">${row.classesDesc}</td>
+                    <td><b>${row.classesCount}</b></td>
+                    <td><b style="color: var(--primary); font-size: 1.05rem;">${row.assignedHours}</b></td>
+                    <td>${row.officialTarget}</td>
+                    <td><span class="mandate-badge"><i class="fa-solid fa-school-flag"></i> ${row.mandateInfo || 'مستقر بمدرستنا'}</span></td>
+                    <td><span class="quota-chip">${row.statement}</span></td>
+                    <td class="no-print">
+                        <button class="btn-action gold" style="padding: 4px 8px; font-size: 0.78rem;" onclick="openQuotaModal(${index})"><i class="fa-solid fa-pen"></i></button>
+                        <button class="btn-action danger" style="padding: 4px 8px; font-size: 0.78rem;" onclick="deleteQuotaRow(${index})"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+            const totalTr = document.createElement("tr");
+            totalTr.style.background = "rgba(0, 229, 255, 0.15)";
+            totalTr.style.fontWeight = "1000";
+            totalTr.innerHTML = `
+                <td colspan="3">الإجمالي العام للحصص الموزعة بمدرسة محمد هاشم النقيب الثانوية</td>
+                <td>${totalClasses} فصل</td>
+                <td style="color: var(--accent); font-size: 1.15rem;">${totalHours} حصة</td>
+                <td>53</td>
+                <td colspan="2">مطابق تماماً لمواصفات وتكليفات الإدارة المدرسية (58 حصة)</td>
+                <td class="no-print">-</td>
+            `;
+            tbody.appendChild(totalTr);
+            document.getElementById("statAssignedHours").innerText = totalHours;
+        }
+        function openQuotaModal(index = null) {
+            const modal = document.getElementById("quotaModal");
+            const quotaList = getQuotaData();
+            if (index !== null) {
+                const q = quotaList[index];
+                document.getElementById("modalQuotaIndex").value = index;
+                document.getElementById("modalQuotaName").value = q.name + (q.roleNote ? ` (${q.roleNote})` : '');
+                document.getElementById("modalQuotaClasses").value = q.classesDesc;
+                document.getElementById("modalQuotaClassesCount").value = q.classesCount;
+                document.getElementById("modalQuotaAssigned").value = q.assignedHours;
+                document.getElementById("modalQuotaOfficialTarget").value = q.officialTarget;
+                document.getElementById("modalQuotaMandateInfo").value = q.mandateInfo || '';
+                document.getElementById("modalQuotaNote").value = q.statement;
+                document.getElementById("quotaModalTitle").innerHTML = `<i class="fa-solid fa-pen-ruler"></i> تعديل نصاب: ${q.name}`;
+            } else {
+                document.getElementById("modalQuotaIndex").value = "";
+                document.getElementById("modalQuotaName").value = "";
+                document.getElementById("modalQuotaClasses").value = "";
+                document.getElementById("modalQuotaClassesCount").value = "1";
+                document.getElementById("modalQuotaAssigned").value = "4";
+                document.getElementById("modalQuotaOfficialTarget").value = "14";
+                document.getElementById("modalQuotaMandateInfo").value = "مستقر بمدرستنا";
+                document.getElementById("modalQuotaNote").value = "مستوفٍ للنصاب";
+                document.getElementById("quotaModalTitle").innerHTML = `<i class="fa-solid fa-plus"></i> إضافة بيان نصاب وانتداب جديد`;
+            }
+            modal.classList.add("active");
+        }
+        function closeQuotaModal() { document.getElementById("quotaModal").classList.remove("active"); }
+        function saveQuotaFromModal() {
+            const indexVal = document.getElementById("modalQuotaIndex").value;
+            const quotaList = getQuotaData();
+            const newRow = {
+                name: document.getElementById("modalQuotaName").value.trim(), roleNote: "",
+                classesDesc: document.getElementById("modalQuotaClasses").value.trim(),
+                classesCount: parseInt(document.getElementById("modalQuotaClassesCount").value) || 0,
+                assignedHours: parseInt(document.getElementById("modalQuotaAssigned").value) || 0,
+                officialTarget: document.getElementById("modalQuotaOfficialTarget").value.trim(),
+                mandateInfo: document.getElementById("modalQuotaMandateInfo").value.trim(),
+                statement: document.getElementById("modalQuotaNote").value.trim()
+            };
+            if (indexVal !== "") quotaList[parseInt(indexVal)] = newRow;
+            else quotaList.push(newRow);
+            saveQuotaData(quotaList);
+            closeQuotaModal();
+            renderQuotaTable();
+        }
+        function deleteQuotaRow(idx) {
+            if (confirm("هل تريد حذف هذا البيان؟")) {
+                const list = getQuotaData();
+                list.splice(idx, 1);
+                saveQuotaData(list);
+                renderQuotaTable();
+            }
+        }
+        function exportQuotaCSV() {
+            const list = getQuotaData();
+            let csv = "\uFEFFم,اسم المعلم,المادة والصف والفصول,عدد الفصول,المسند,النصاب,موقف الندب,الملاحظات\n";
+            list.forEach((r, i) => { csv += `"${i+1}","${r.name}","${r.classesDesc}","${r.classesCount}","${r.assignedHours}","${r.officialTarget}","${r.mandateInfo}","${r.statement}"\n`; });
+            downloadCSVFile(csv, "توزيع_الحصص.csv");
+        }
+
+        /* 3. الجدول العام */
+        function renderMasterTimetable() {
+            const sched = getMasterSchedule();
+            const tbody = document.getElementById("masterTimetableBody");
+            tbody.innerHTML = "";
+            sched.forEach((row, dayIdx) => {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `<td><b>${row.day}</b></td>`;
+                for (let i = 1; i <= 7; i++) {
+                    const cell = row[`p${i}`] || { c: "-", t: "-" };
+                    const td = document.createElement("td");
+                    td.className = "timetable-cell";
+                    td.onclick = () => openCellEditModal(dayIdx, `p${i}`, row.day, i);
+                    td.innerHTML = cell.c !== '-' ? `<b>${cell.c}</b><span>${cell.t}</span>` : '-';
+                    tr.appendChild(td);
+                }
+                tbody.appendChild(tr);
+            });
+        }
+        function openCellEditModal(dayIdx, periodKey, dayName, periodNum) {
+            const sched = getMasterSchedule();
+            const currentCell = sched[dayIdx][periodKey] || { c: "", t: "" };
+            document.getElementById("cellEditDayIndex").value = dayIdx;
+            document.getElementById("cellEditPeriodKey").value = periodKey;
+            document.getElementById("cellEditDayPeriodName").value = `${dayName} - الحصة (${periodNum})`;
+            document.getElementById("cellEditClassSubject").value = currentCell.c !== '-' ? currentCell.c : '';
+            document.getElementById("cellEditTeacherName").value = currentCell.t !== '-' ? currentCell.t : '';
+            document.getElementById("cellEditModal").classList.add("active");
+        }
+        function closeCellEditModal() { document.getElementById("cellEditModal").classList.remove("active"); }
+        function saveCellEdit() {
+            const dayIdx = parseInt(document.getElementById("cellEditDayIndex").value);
+            const periodKey = document.getElementById("cellEditPeriodKey").value;
+            const cVal = document.getElementById("cellEditClassSubject").value.trim() || '-';
+            const tVal = document.getElementById("cellEditTeacherName").value.trim() || '-';
+            const sched = getMasterSchedule();
+            sched[dayIdx][periodKey] = { c: cVal, t: tVal };
+            saveMasterSchedule(sched);
+            closeCellEditModal();
+            renderMasterTimetable();
+        }
+        function exportMasterScheduleJSON() {
+            const blob = new Blob([JSON.stringify(getMasterSchedule(), null, 2)], { type: "application/json" });
+            const a = document.createElement("a");
+            a.href = URL.createObjectURL(blob);
+            a.download = `الجدول_العام.json`;
+            a.click();
+        }
+
+        /* 4. جدول المعلم المستقل */
+        function renderIndividualSchedule(code) {
+            const teachers = getTeachersData();
+            const teacher = teachers[code];
+            if (!teacher) return;
+            document.getElementById("indivNameTitle").innerHTML = `جدول المعلم: <b>${teacher.name}</b> (${teacher.jobTitle})`;
+            document.getElementById("indivQuotaBadge").innerHTML = `حصص مدرستنا: <b>${teacher.quotaHours} حصة</b>`;
+            const rowsTbody = document.getElementById("indivScheduleRows");
+            rowsTbody.innerHTML = "";
+            const masterSched = getMasterSchedule();
+            const days = ["الأحد", "الإثنين", "الثلاثاء", "الأربعاء", "الخميس"];
+            days.forEach((dayName, dayIdx) => {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `<td><b>${dayName}</b></td>`;
+                const dayRow = masterSched[dayIdx];
+                for (let i = 1; i <= 7; i++) {
+                    const cell = dayRow ? dayRow[`p${i}`] : null;
+                    let display = "-";
+                    if (cell && cell.t && cell.t.includes(teacher.name.split(" ")[1] || teacher.name.split(" ")[0])) {
+                        display = `<b>${cell.c}</b>`;
+                    }
+                    tr.innerHTML += `<td class="timetable-cell">${display}</td>`;
+                }
+                rowsTbody.appendChild(tr);
+            });
+        }
+        function printIndividualTeacherSchedule() {
+            const select = document.getElementById("individualTeacherSelect");
+            printActiveRecord(`جدول الحصص الفردي: ${select.options[select.selectedIndex].text}`);
+        }
+        function openEditTeacherScheduleModal() {
+            switchAdminTab('tabMasterTimetable');
+            alert("عدل الحصص مباشرة في الجدول العام وسيتم التحديث هنا فوراً!");
+        }
+
+        /* 5. المعلمين */
+        function renderTeachersRegistry() {
+            const tbody = document.getElementById("teachersRegistryBody");
+            tbody.innerHTML = "";
+            Object.values(getTeachersData()).forEach(t => {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td><b>${t.code}</b></td><td><b>${t.name}</b></td><td>${t.nationalId}</td>
+                    <td>${t.jobTitle}</td><td>${t.qualification}</td><td>${t.subject}</td>
+                    <td><span class="mandate-badge">${t.mandateNote || 'مستقر'}</span></td>
+                    <td class="no-print">
+                        <button class="btn-action gold" style="padding: 4px 8px;" onclick="openTeacherModal('${t.code}')"><i class="fa-solid fa-pen"></i></button>
+                        <button class="btn-action danger" style="padding: 4px 8px;" onclick="deleteTeacher('${t.code}')"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+        function openTeacherModal(code = null) {
+            const modal = document.getElementById("teacherModal");
+            const teachers = getTeachersData();
+            if (code && teachers[code]) {
+                const t = teachers[code];
+                document.getElementById("modalTeacherOriginalCode").value = t.code;
+                document.getElementById("modalTeacherCode").value = t.code;
+                document.getElementById("modalTeacherName").value = t.name;
+                document.getElementById("modalTeacherNationalId").value = t.nationalId;
+                document.getElementById("modalTeacherJob").value = t.jobTitle;
+                document.getElementById("modalTeacherQual").value = t.qualification;
+                document.getElementById("modalTeacherSubject").value = t.subject;
+                document.getElementById("modalTeacherPhone").value = t.phone;
+                document.getElementById("modalTeacherQuotaHours").value = t.quotaHours;
+                document.getElementById("modalTeacherMandateNote").value = t.mandateNote || '';
+                document.getElementById("teacherModalTitle").innerHTML = `<i class="fa-solid fa-user-pen"></i> تعديل: ${t.name}`;
+            } else {
+                document.getElementById("modalTeacherOriginalCode").value = "";
+                document.getElementById("modalTeacherCode").value = Math.floor(1000000 + Math.random() * 9000000);
+                document.getElementById("modalTeacherName").value = "";
+                document.getElementById("modalTeacherNationalId").value = "";
+                document.getElementById("modalTeacherJob").value = "معلم";
+                document.getElementById("modalTeacherQual").value = "بكالوريوس";
+                document.getElementById("modalTeacherSubject").value = "برمجة";
+                document.getElementById("modalTeacherPhone").value = "010xxxxxxxx";
+                document.getElementById("modalTeacherQuotaHours").value = "14";
+                document.getElementById("modalTeacherMandateNote").value = "مستقر بمدرستنا";
+                document.getElementById("teacherModalTitle").innerHTML = `<i class="fa-solid fa-user-plus"></i> إضافة معلم`;
+            }
+            modal.classList.add("active");
+        }
+        function closeTeacherModal() { document.getElementById("teacherModal").classList.remove("active"); }
+        function saveTeacherFromModal() {
+            const origCode = document.getElementById("modalTeacherOriginalCode").value;
+            const newCode = document.getElementById("modalTeacherCode").value.trim();
+            const teachers = getTeachersData();
+            const teacherObj = {
+                code: newCode, name: document.getElementById("modalTeacherName").value.trim(),
+                nationalId: document.getElementById("modalTeacherNationalId").value.trim(),
+                jobTitle: document.getElementById("modalTeacherJob").value.trim(),
+                qualification: document.getElementById("modalTeacherQual").value.trim(),
+                subject: document.getElementById("modalTeacherSubject").value.trim(),
+                phone: document.getElementById("modalTeacherPhone").value.trim(),
+                quotaHours: parseInt(document.getElementById("modalTeacherQuotaHours").value) || 0,
+                mandateNote: document.getElementById("modalTeacherMandateNote").value.trim(),
+                classes: origCode && teachers[origCode] ? teachers[origCode].classes : []
+            };
+            if (origCode && origCode !== newCode) delete teachers[origCode];
+            teachers[newCode] = teacherObj;
+            saveTeachersData(teachers);
+            closeTeacherModal();
+            populateSelectTeacherDropdown(); populateIndividualTeacherDropdown();
+            renderTeachersRegistry(); renderSignaturesTable(); updateStatistics();
+        }
+        function deleteTeacher(code) {
+            if (confirm("حذف المعلم نهائياً؟")) {
+                const teachers = getTeachersData(); delete teachers[code]; saveTeachersData(teachers);
+                populateSelectTeacherDropdown(); populateIndividualTeacherDropdown();
+                renderTeachersRegistry(); renderSignaturesTable(); updateStatistics();
+            }
+        }
+        function exportTeachersCSV() {
+            let csv = "\uFEFFالكود,الاسم,الرقم القومي,الوظيفة,المؤهل,المادة,الهاتف,الحصص,موقف الندب\n";
+            Object.values(getTeachersData()).forEach(t => csv += `"${t.code}","${t.name}","${t.nationalId}","${t.jobTitle}","${t.qualification}","${t.subject}","${t.phone}","${t.quotaHours}","${t.mandateNote}"\n`);
+            downloadCSVFile(csv, "المعلمين.csv");
+        }
+
+        /* 6. التقييم الإشرافي */
+        function autoCalculateEvalScore() {
+            const total = [1,2,3,4,5,6].reduce((acc, i) => acc + (parseInt(document.getElementById("evalItem"+i).value)||0), 0);
+            let rating = total >= 56 ? "ممتاز مرتفع" : total >= 48 ? "ممتاز" : total >= 40 ? "جيد جداً" : total >= 32 ? "جيد" : "مقبول";
+            document.getElementById("displayAutoScore").innerText = `${total} / 60`;
+            document.getElementById("displayAutoRating").innerText = rating;
+            return { total, rating };
+        }
+        function renderEvaluationsTable() {
+            const tbody = document.getElementById("evaluationTableBody");
+            tbody.innerHTML = "";
+            (JSON.parse(localStorage.getItem("mhn_evaluations"))||[]).forEach((ev, idx) => {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td>${idx + 1}</td><td><b>${ev.name}</b></td><td>${ev.date}</td>
+                    <td>${ev.item1}</td><td>${ev.item2}</td><td>${ev.item3}</td>
+                    <td>${ev.item4}</td><td>${ev.item5}</td><td>${ev.item6}</td>
+                    <td><b style="color:var(--primary);">${ev.total}</b></td>
+                    <td><span class="quota-chip">${ev.rating}</span></td>
+                    <td style="text-align: right;"><small>${ev.notes}</small></td>
+                    <td class="no-print">
+                        <button class="btn-action gold" style="padding:4px 8px;" onclick="openEvalModal(${ev.id})"><i class="fa-solid fa-pen"></i></button>
+                        <button class="btn-action danger" style="padding:4px 8px;" onclick="deleteEval(${ev.id})"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+        function openEvalModal(id = null) {
+            const evals = JSON.parse(localStorage.getItem("mhn_evaluations")) || [];
+            if (id !== null) {
+                const item = evals.find(e => e.id === id);
+                if (item) {
+                    document.getElementById("modalEvalId").value = item.id;
+                    document.getElementById("modalEvalTeacherName").value = item.name;
+                    document.getElementById("modalEvalDate").value = item.date;
+                    for(let i=1;i<=6;i++) document.getElementById("evalItem"+i).value = item["item"+i];
+                    document.getElementById("modalEvalNotes").value = item.notes;
+                    document.getElementById("evalModalTitle").innerHTML = `<i class="fa-solid fa-star"></i> تعديل تقييم: ${item.name}`;
+                }
+            } else {
+                document.getElementById("modalEvalId").value = "";
+                document.getElementById("modalEvalTeacherName").value = "";
+                document.getElementById("modalEvalDate").value = new Date().toISOString().split('T')[0];
+                for(let i=1;i<=6;i++) document.getElementById("evalItem"+i).value = "10";
+                document.getElementById("modalEvalNotes").value = "متميز ومستوفٍ لكافة المعايير الرسمية.";
+                document.getElementById("evalModalTitle").innerHTML = `<i class="fa-solid fa-plus"></i> رصد تقييم جديد`;
+            }
+            autoCalculateEvalScore();
+            document.getElementById("evalModal").classList.add("active");
+        }
+        function closeEvalModal() { document.getElementById("evalModal").classList.remove("active"); }
+        function saveEvalFromModal() {
+            const calc = autoCalculateEvalScore();
+            const idVal = document.getElementById("modalEvalId").value;
+            const newEval = {
+                id: idVal ? parseInt(idVal) : Date.now(),
+                name: document.getElementById("modalEvalTeacherName").value.trim(),
+                date: document.getElementById("modalEvalDate").value,
+                item1: parseInt(document.getElementById("evalItem1").value),
+                item2: parseInt(document.getElementById("evalItem2").value),
+                item3: parseInt(document.getElementById("evalItem3").value),
+                item4: parseInt(document.getElementById("evalItem4").value),
+                item5: parseInt(document.getElementById("evalItem5").value),
+                item6: parseInt(document.getElementById("evalItem6").value),
+                total: calc.total, rating: calc.rating, notes: document.getElementById("modalEvalNotes").value.trim()
+            };
+            let evals = JSON.parse(localStorage.getItem("mhn_evaluations")) || [];
+            if (idVal) {
+                const idx = evals.findIndex(e => e.id === parseInt(idVal));
+                if (idx !== -1) evals[idx] = newEval;
+            } else evals.push(newEval);
+            localStorage.setItem("mhn_evaluations", JSON.stringify(evals));
+            closeEvalModal(); renderEvaluationsTable();
+        }
+        function deleteEval(id) {
+            if(confirm("حذف التقييم؟")) {
+                localStorage.setItem("mhn_evaluations", JSON.stringify((JSON.parse(localStorage.getItem("mhn_evaluations"))||[]).filter(e => e.id !== id)));
+                renderEvaluationsTable();
+            }
+        }
+        function exportEvaluationsCSV() {
+            let csv = "\uFEFFم,اسم المعلم,تاريخ الزيارة,انضباط,جدول,تحضير,تقييمات,شرح,أنشطة,المجموع,التقدير,الملاحظات\n";
+            (JSON.parse(localStorage.getItem("mhn_evaluations"))||[]).forEach((e, i) => csv += `"${i+1}","${e.name}","${e.date}","${e.item1}","${e.item2}","${e.item3}","${e.item4}","${e.item5}","${e.item6}","${e.total}","${e.rating}","${e.notes}"\n`);
+            downloadCSVFile(csv, "التقييمات.csv");
+        }
+
+        /* 7. التوقيعات */
+        function renderSignaturesTable() {
+            const tbody = document.getElementById("signaturesTableBody");
+            tbody.innerHTML = "";
+            const subs = JSON.parse(localStorage.getItem("mhn_submissions")) || [];
+            Object.values(getTeachersData()).forEach((t, i) => {
+                const sub = subs.find(s => s.code === t.code);
+                const signed = sub ? `<span style="color:var(--success); font-weight:bold;"><i class="fa-solid fa-check-double"></i> تم التوقيع (${sub.timestamp})</span>` : `<span style="color:var(--text-muted);">في انتظار الاستيفاء</span>`;
+                tbody.innerHTML += `<tr><td>${i+1}</td><td><b>${t.name}</b></td><td>${t.jobTitle}</td><td><b>${t.quotaHours}</b></td><td style="text-align:right;">${t.classes ? t.classes.map(c=>c.title).join(' + ') : t.subject}</td><td><span class="mandate-badge">${t.mandateNote||'مستقر'}</span></td><td>${signed}</td></tr>`;
+            });
+        }
+        function exportSignaturesCSV() {
+            let csv = "\uFEFFم,اسم المعلم,الوظيفة,الحصص,الفصول,موقف الندب,التوقيع\n";
+            const subs = JSON.parse(localStorage.getItem("mhn_submissions")) || [];
+            Object.values(getTeachersData()).forEach((t, i) => {
+                const sub = subs.find(s => s.code === t.code);
+                csv += `"${i+1}","${t.name}","${t.jobTitle}","${t.quotaHours}","${t.subject}","${t.mandateNote}","${sub ? 'تم التوقيع' : 'لم يوقع'}"\n`;
+            });
+            downloadCSVFile(csv, "التوقيعات.csv");
+        }
+
+        /* دوال عامة والتصدير */
+        function downloadCSVFile(content, filename) {
+            const a = document.createElement("a");
+            a.href = URL.createObjectURL(new Blob([content], { type: 'text/csv;charset=utf-8;' }));
+            a.download = filename; a.click();
+        }
+        function exportDataToExcel() {
+            let csv = "\uFEFFالكود,الاسم,الرقم القومي,الوظيفة,المادة,الهاتف,دفتر,درجات,جدول,تعهد,الوقت\n";
+            (JSON.parse(localStorage.getItem("mhn_submissions"))||[]).forEach(s => csv += `"${s.code}","${s.name}","${s.nationalId}","${s.jobTitle}","${s.subject}","${s.phone}","${s.prepBook}","${s.gradeRecord}","${s.timetable}","${s.legalPledge}","${s.timestamp}"\n`);
+            downloadCSVFile(csv, "البيانات_المدخلة.csv");
+        }
+        function updateStatistics() {
+            document.getElementById("statTotalTeachers").innerText = Object.keys(getTeachersData()).length;
+            document.getElementById("statCompletedPledges").innerText = (JSON.parse(localStorage.getItem("mhn_submissions"))||[]).length;
+        }
+        function togglePrintOrientation() {
+            document.body.classList.toggle("landscape-mode");
+            alert(`تم التبديل لطباعة A4: ${document.body.classList.contains("landscape-mode") ? 'عرضي Landscape' : 'طولي Portrait'}`);
+        }
+        function printActiveRecord(title) {
+            document.getElementById("printDocTitle").innerText = title;
+            window.print();
+        }
+        function saveWebhookUrl() {
+            localStorage.setItem("mhn_gas_webhook", document.getElementById("gasWebhookUrl").value.trim());
+            alert("تم حفظ رابط المزامنة بنجاح!");
+        }
+        async function testCloudSync() {
+            const url = localStorage.getItem("mhn_gas_webhook") || document.getElementById("gasWebhookUrl").value.trim();
+            if (!url) { alert("أدخل الرابط أولاً!"); return; }
+            try {
+                await fetch(url, { method: "POST", mode: "no-cors", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ test: true }) });
+                alert("تم إرسال طلب المزامنة بنجاح!");
+            } catch (err) { alert("خطأ: " + err.message); }
+        }
+        function exportBackupJson() {
+            const backup = { teachers: getTeachersData(), quotaPlan: getQuotaData(), masterSchedule: getMasterSchedule(), submissions: JSON.parse(localStorage.getItem("mhn_submissions"))||[], evaluations: JSON.parse(localStorage.getItem("mhn_evaluations"))||[], date: new Date().toISOString() };
+            const a = document.createElement("a");
+            a.href = URL.createObjectURL(new Blob([JSON.stringify(backup, null, 2)], { type: "application/json" }));
+            a.download = `backup_${new Date().toISOString().slice(0,10)}.json`; a.click();
+        }
+        function importBackupJson(event) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    if(data.teachers) saveTeachersData(data.teachers);
+                    if(data.quotaPlan) saveQuotaData(data.quotaPlan);
+                    if(data.masterSchedule) saveMasterSchedule(data.masterSchedule);
+                    if(data.submissions) localStorage.setItem("mhn_submissions", JSON.stringify(data.submissions));
+                    if(data.evaluations) localStorage.setItem("mhn_evaluations", JSON.stringify(data.evaluations));
+                    initAppStorage(); alert("تم الاستيراد بنجاح!");
+                } catch(err) { alert("ملف تالف!"); }
+            };
+            if(event.target.files[0]) reader.readAsText(event.target.files[0]);
+        }
+
+        window.addEventListener("DOMContentLoaded", () => {
+            initAppStorage();
+            document.getElementById("gasWebhookUrl").value = localStorage.getItem("mhn_gas_webhook") || DEFAULT_GAS_URL;
+        });
+    </script>
+</body>
+</html>
+
