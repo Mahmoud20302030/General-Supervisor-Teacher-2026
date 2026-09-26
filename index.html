@@ -2223,7 +2223,7 @@
         }
 
         // رابط المزامنة الجديد الذي تم إرفاقه
-        const DEFAULT_GAS_URL = "https://script.google.com/macros/s/AKfycbz3qiq2wwwykmLMRxYy43JGL5t0UOe-VV-2LhHtnilN20wAubX7uarIVxGK3QgcfLIE/exec";
+        const DEFAULT_GAS_URL = "https://script.google.com/macros/s/AKfycbzjUvVV_4GeXXPyGY2ZGZGnum0n8WnrOlIp4RUpRhz0BwUmG2xzPNnpfpGevBYopVYghg/exec";
 
         // دالة تشغيل نغمة الاحتفال الرقمية المتطورة
         function playSuccessChime() {
@@ -2448,9 +2448,14 @@
         }
 
         function getConfiguredCloudUrl() {
-            return String(
-                localStorage.getItem("mhn_gas_webhook") || DEFAULT_GAS_URL || ""
-            ).trim();
+            const savedUrl = String(localStorage.getItem("mhn_gas_webhook") || "").trim();
+            // ترحيل تلقائي لأي نسخة كانت تستخدم رابط Apps Script القديم.
+            const legacyUrl = "https://script.google.com/macros/s/AKfycbz3qiq2wwwykmLMRxYy43JGL5t0UOe-VV-2LhHtnilN20wAubX7uarIVxGK3QgcfLIE/exec";
+            if (!savedUrl || savedUrl === legacyUrl) {
+                localStorage.setItem("mhn_gas_webhook", DEFAULT_GAS_URL);
+                return DEFAULT_GAS_URL;
+            }
+            return savedUrl;
         }
 
         function hasCloudRecords(db) {
