@@ -1693,7 +1693,7 @@
                     </div>
                     <div style="display: flex; gap: 10px; flex-wrap: wrap;">
                         <button class="btn-action" onclick="saveWebhookUrl()"><i class="fa-solid fa-floppy-disk"></i> حفظ رابط المزامنة</button>
-                        <button class="btn-action gold" onclick="testCloudSync()"><i class="fa-solid fa-rotate"></i> اختبار المزامنة اللحظية</button>
+                        <button class="btn-action gold" onclick="testCloudSync()"><i class="fa-solid fa-rotate"></i> اختبار المزامنة اللحظية (تحديث إجباري)</button>
                         <button class="btn-action" onclick="exportBackupJson()"><i class="fa-solid fa-download"></i> تصدير قاعدة البيانات كاملة (JSON)</button>
                         <label class="btn-action" style="margin: 0; cursor: pointer;">
                             <i class="fa-solid fa-upload"></i> استيراد قاعدة بيانات كاملة (JSON)
@@ -2003,10 +2003,10 @@
         </div>
     </div>
 
-    <!-- نظام الجافاسكريبت المطور المتكامل لإدارة البيانات والطباعة والمزامنة -->
+    <!-- نظام الجافاسكريبت المطور المتكامل لإدارة البيانات والطباعة والمزامنة ثنائية الاتجاه -->
     <script>
-        // رابط المزامنة الافتراضي المحفوظ تلقائياً
-        const DEFAULT_GAS_URL = "https://script.google.com/macros/s/AKfycbxtJuzb81NV3y2Mu2wudKKwgFDByDXdQBJ-523NlPVH_E_3pkApS0i2TEDmHZPhbalt/exec";
+        // رابط المزامنة الجديد الذي تم إرفاقه
+        const DEFAULT_GAS_URL = "https://script.google.com/macros/s/AKfycbz3qiq2wwwykmLMRxYy43JGL5t0UOe-VV-2LhHtnilN20wAubX7uarIVxGK3QgcfLIE/exec";
 
         // دالة تشغيل نغمة الاحتفال الرقمية المتطورة
         function playSuccessChime() {
@@ -2075,12 +2075,82 @@
             { id: 3, name: "مروة محمد السيد عامر", date: "2026-09-22", item1: 10, item2: 8, item3: 10, item4: 8, item5: 10, item6: 10, total: 56, rating: "ممتاز", notes: "تفعيل متميز لمعمل الحاسب الآلي والسبورة التفاعلية مع فصول أولى ثانوي." }
         ];
 
+        // -------------------------------------------------------------
+        // NEW ROOT FEATURE: TWO-WAY SYNC (RADICAL SOLUTION)
+        // -------------------------------------------------------------
+        
         function getTeachersData() { return JSON.parse(localStorage.getItem("mhn_teachers")) || defaultTeachers; }
         function saveTeachersData(data) { localStorage.setItem("mhn_teachers", JSON.stringify(data)); }
         function getQuotaData() { return JSON.parse(localStorage.getItem("mhn_quota_plan")) || defaultQuotaPlan; }
         function saveQuotaData(data) { localStorage.setItem("mhn_quota_plan", JSON.stringify(data)); }
         function getMasterSchedule() { return JSON.parse(localStorage.getItem("mhn_master_schedule")) || defaultMasterSchedule; }
         function saveMasterSchedule(data) { localStorage.setItem("mhn_master_schedule", JSON.stringify(data)); }
+
+        // دالة المزامنة السحابية (ترسل قاعدة البيانات بالكامل مع أي تعديل)
+        function syncDatabaseToCloud(actionType = null, payloadData = null) {
+            const url = localStorage.getItem("mhn_gas_webhook");
+            if (!url) return;
+
+            const fullDb = {
+                teachers: getTeachersData(),
+                quotaPlan: getQuotaData(),
+                masterSchedule: getMasterSchedule(),
+                submissions: JSON.parse(localStorage.getItem("mhn_submissions")) || [],
+                evaluations: JSON.parse(localStorage.getItem("mhn_evaluations")) || []
+            };
+
+            const postData = {
+                database: fullDb
+            };
+
+            if (actionType) postData.action = actionType;
+            if (payloadData) postData.payload = payloadData;
+
+            // إرسال البيانات كـ text/plain لتخطي مشاكل CORS في Google Apps Script[span_0](start_span)[span_0](end_span)
+            fetch(url, {
+                method: "POST",
+                headers: { "Content-Type": "text/plain;charset=utf-8" },
+                body: JSON.stringify(postData)
+            }).then(res => console.log("تمت المزامنة السحابية الصامتة بنجاح"))
+              .catch(err => console.log("خطأ في المزامنة (محفوظ محلياً فقط):", err));
+        }
+
+        // دالة جلب البيانات من السحابة عند فتح المتصفح
+        async function fetchCloudDataOnLoad() {
+            const url = localStorage.getItem("mhn_gas_webhook");
+            if (!url) return;
+
+            try {
+                // جلب البيانات بناءً على دالة doGet الموجودة في الكود الخاص بك[span_1](start_span)[span_1](end_span)
+                const response = await fetch(url + "?action=getData");
+                if (response.ok) {
+                    const dbStr = await response.text();
+                    if (dbStr && dbStr.length > 10 && dbStr !== "null") {
+                        const cloudData = JSON.parse(dbStr);
+                        
+                        if (cloudData.teachers) saveTeachersData(cloudData.teachers);
+                        if (cloudData.quotaPlan) saveQuotaData(cloudData.quotaPlan);
+                        if (cloudData.masterSchedule) saveMasterSchedule(cloudData.masterSchedule);
+                        if (cloudData.submissions) localStorage.setItem("mhn_submissions", JSON.stringify(cloudData.submissions));
+                        if (cloudData.evaluations) localStorage.setItem("mhn_evaluations", JSON.stringify(cloudData.evaluations));
+
+                        // إعادة رسم الواجهة بالبيانات الجديدة القادمة من السحابة
+                        populateSelectTeacherDropdown();
+                        populateIndividualTeacherDropdown();
+                        renderTeachersRegistry();
+                        renderQuotaTable();
+                        renderMasterTimetable();
+                        renderSignaturesTable();
+                        renderSubmissionsTable();
+                        renderEvaluationsTable();
+                        updateStatistics();
+                        console.log("تم سحب البيانات من السحابة بنجاح!");
+                    }
+                }
+            } catch (error) {
+                console.warn("جلب البيانات من السحابة فشل، سيتم استخدام البيانات المحلية (Offline).", error);
+            }
+        }
 
         function initAppStorage() {
             if (!localStorage.getItem("mhn_gas_webhook")) {
@@ -2214,20 +2284,8 @@
             submissions.push(latestSubmission);
             localStorage.setItem("mhn_submissions", JSON.stringify(submissions));
 
-            // الإرسال السحابي (حل مشكلة التطبيق Google Sheets Sync عبر تغيير Content-Type)
-            const gasUrl = localStorage.getItem("mhn_gas_webhook");
-            if (gasUrl) {
-                try {
-                    fetch(gasUrl, {
-                        method: "POST",
-                        mode: "no-cors",
-                        headers: { "Content-Type": "text/plain;charset=utf-8" },
-                        body: JSON.stringify(latestSubmission)
-                    }).catch(err => console.log("Silent cloud sync error:", err));
-                } catch (err) {
-                    console.warn("Cloud sync exception:", err);
-                }
-            }
+            // تشغيل المزامنة السحابية الجذرية فوراً ليتم إدراج الصف في جوجل شيت وحفظ قاعدة البيانات
+            syncDatabaseToCloud("new_submission", latestSubmission);
 
             renderSubmissionsTable();
             renderSignaturesTable();
@@ -2254,7 +2312,6 @@
         function printReceiptDirect() {
             closeCelebrationModal();
             
-            // تهيئة إيصال الطباعة المخصص وحل مشكلة عدم ظهوره
             const receiptSection = document.getElementById("receiptPrintSection");
             receiptSection.innerHTML = `
                 <h2 style="text-align: center; margin-bottom: 25px; color: #000; border-bottom: 2px solid #000; padding-bottom: 10px;">إيصال استيفاء بيانات المعلم والتعهد الرسمي</h2>
@@ -2394,6 +2451,7 @@
                 closeSubModal();
                 renderSubmissionsTable();
                 renderSignaturesTable();
+                syncDatabaseToCloud(); // تشغيل المزامنة
             }
         }
         function deleteSubmission(id) {
@@ -2404,6 +2462,7 @@
                 renderSubmissionsTable();
                 renderSignaturesTable();
                 updateStatistics();
+                syncDatabaseToCloud(); // تشغيل المزامنة
             }
         }
 
@@ -2493,6 +2552,7 @@
             saveQuotaData(quotaList);
             closeQuotaModal();
             renderQuotaTable();
+            syncDatabaseToCloud(); // تشغيل المزامنة
         }
         function deleteQuotaRow(idx) {
             if (confirm("هل تريد حذف هذا البيان؟")) {
@@ -2500,6 +2560,7 @@
                 list.splice(idx, 1);
                 saveQuotaData(list);
                 renderQuotaTable();
+                syncDatabaseToCloud(); // تشغيل المزامنة
             }
         }
         function exportQuotaCSV() {
@@ -2549,6 +2610,7 @@
             saveMasterSchedule(sched);
             closeCellEditModal();
             renderMasterTimetable();
+            syncDatabaseToCloud(); // تشغيل المزامنة
         }
         function exportMasterScheduleJSON() {
             const blob = new Blob([JSON.stringify(getMasterSchedule(), null, 2)], { type: "application/json" });
@@ -2558,7 +2620,7 @@
             a.click();
         }
 
-        /* 4. تصحيح جدول المعلم المستقل */
+        /* 4. جدول المعلم المستقل */
         function isTeacherMatch(shortName, fullName) {
             if (!shortName || !fullName || shortName === '-') return false;
             const sNameParts = shortName.replace("أ/ ", "").trim().split(" ");
@@ -2670,12 +2732,14 @@
             closeTeacherModal();
             populateSelectTeacherDropdown(); populateIndividualTeacherDropdown();
             renderTeachersRegistry(); renderSignaturesTable(); updateStatistics();
+            syncDatabaseToCloud(); // تشغيل المزامنة
         }
         function deleteTeacher(code) {
             if (confirm("حذف المعلم نهائياً؟")) {
                 const teachers = getTeachersData(); delete teachers[code]; saveTeachersData(teachers);
                 populateSelectTeacherDropdown(); populateIndividualTeacherDropdown();
                 renderTeachersRegistry(); renderSignaturesTable(); updateStatistics();
+                syncDatabaseToCloud(); // تشغيل المزامنة
             }
         }
         function exportTeachersCSV() {
@@ -2758,11 +2822,13 @@
             } else evals.push(newEval);
             localStorage.setItem("mhn_evaluations", JSON.stringify(evals));
             closeEvalModal(); renderEvaluationsTable();
+            syncDatabaseToCloud(); // تشغيل المزامنة
         }
         function deleteEval(id) {
             if(confirm("حذف التقييم؟")) {
                 localStorage.setItem("mhn_evaluations", JSON.stringify((JSON.parse(localStorage.getItem("mhn_evaluations"))||[]).filter(e => e.id !== id)));
                 renderEvaluationsTable();
+                syncDatabaseToCloud(); // تشغيل المزامنة
             }
         }
         function exportEvaluationsCSV() {
@@ -2823,8 +2889,9 @@
             const url = localStorage.getItem("mhn_gas_webhook") || document.getElementById("gasWebhookUrl").value.trim();
             if (!url) { alert("أدخل الرابط أولاً!"); return; }
             try {
-                await fetch(url, { method: "POST", mode: "no-cors", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ test: true }) });
-                alert("تم إرسال طلب المزامنة بنجاح!");
+                // إجبار تشغيل دالة المزامنة السحابية الجذرية للاختبار
+                syncDatabaseToCloud();
+                alert("تم إرسال طلب المزامنة السحابية الشاملة! تحقق من الشيت.");
             } catch (err) { alert("خطأ: " + err.message); }
         }
         function exportBackupJson() {
@@ -2843,15 +2910,21 @@
                     if(data.masterSchedule) saveMasterSchedule(data.masterSchedule);
                     if(data.submissions) localStorage.setItem("mhn_submissions", JSON.stringify(data.submissions));
                     if(data.evaluations) localStorage.setItem("mhn_evaluations", JSON.stringify(data.evaluations));
-                    initAppStorage(); alert("تم الاستيراد بنجاح!");
+                    initAppStorage(); 
+                    syncDatabaseToCloud(); // مزامنة البيانات المستوردة للسحابة فوراً
+                    alert("تم الاستيراد والمزامنة بنجاح!");
                 } catch(err) { alert("ملف تالف!"); }
             };
             if(event.target.files[0]) reader.readAsText(event.target.files[0]);
         }
 
+        // عند فتح الصفحة، تهيئة النظام ثم جلب البيانات من السحابة إذا كانت متوفرة
         window.addEventListener("DOMContentLoaded", () => {
             initAppStorage();
             document.getElementById("gasWebhookUrl").value = localStorage.getItem("mhn_gas_webhook") || DEFAULT_GAS_URL;
+            
+            // التشغيل الراديكالي: سحب أحدث بيانات من جوجل شيت فور تحميل الصفحة
+            fetchCloudDataOnLoad();
         });
     </script>
 </body>
