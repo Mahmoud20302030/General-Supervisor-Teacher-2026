@@ -1,10 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>منظومة الإشراف الإلكتروني والإدارة المدرسية | مدرسة محمد هاشم النقيب الثانوية المشتركة</title>
-
     
     <!-- الوسوم التعريفية العالمية لمشاركة الرابط (Open Graph & Meta Tags) -->
     <meta name="description" content="البوابة الرسمية المتكاملة لإدارة السادة المعلمين، خطة توزيع الحصص، الجداول المدرسية، وسجلات المعلم المشرف 2026/2027 - مدرسة محمد هاشم النقيب الثانوية المشتركة بإدارة ميت غمر التعليمية.">
@@ -1021,7 +1020,7 @@
             .official-table {
                 width: 100% !important;
                 max-width: 100% !important;
-                table-layout: auto !important; /* السماح بتوزيع المسافات بحرية */
+                table-layout: auto !important;
                 border-collapse: collapse !important;
             }
             .official-table th, .official-table td {
@@ -1073,7 +1072,6 @@
             }
             .sig-col {
                 text-align: center;
-                width: 25%;
             }
             .sig-name {
                 margin-top: 35px;
@@ -1090,6 +1088,26 @@
                 font-size: 9pt;
                 color: #444;
                 margin: 0 auto;
+            }
+
+            /* نمط طباعة الإيصال المخصص */
+            body.print-receipt-mode .admin-tabs,
+            body.print-receipt-mode .tab-content,
+            body.print-receipt-mode .stats-grid,
+            body.print-receipt-mode .table-toolbar,
+            body.print-receipt-mode .table-responsive,
+            body.print-receipt-mode .admin-header,
+            body.print-receipt-mode .commitments-panel,
+            body.print-receipt-mode .print-official-signatures,
+            body.print-receipt-mode .print-official-header {
+                display: none !important;
+            }
+            body.print-receipt-mode #receiptPrintSection {
+                display: block !important;
+                visibility: visible !important;
+            }
+            body.print-receipt-mode #receiptPrintSection * {
+                visibility: visible !important;
             }
         }
 
@@ -1385,6 +1403,9 @@
                     <div>مستند رسمي معتمد</div>
                 </div>
             </div>
+            
+            <!-- قسم طباعة الإيصال فقط -->
+            <div id="receiptPrintSection" style="display: none; padding: 20px; font-size: 14pt; line-height: 2; color: #000;"></div>
 
             <!-- هيدر اللوحة -->
             <div class="admin-header">
@@ -1393,7 +1414,7 @@
                     <div>
                         <h2>لوحة السجلات والإشراف الفني والجداول المدرسية</h2>
                         <span style="color: var(--accent); font-weight: bold;">
-                            المعلم المشرف: أ/ محمود محمد عبد الوهاب عيسى | وكيل المدرسة: أ/ عبدالحميد عثمان عيد | القائم بأعمال مدير المدرسة: أ/ مسعود مخيمر
+                            وكيل المدرسة: أ/ عبد الحميد عثمان عيد | القائم بأعمال مدير المدرسة: أ/ مسعود محمد مخيمر
                         </span>
                     </div>
                 </div>
@@ -1560,9 +1581,8 @@
                     </div>
                     <div style="display: flex; justify-content: space-between; margin-top: 25px; padding-top: 15px; border-top: 1px dashed rgba(255,255,255,0.2); font-weight: bold; color: var(--accent);">
                         <div>توقيع المعلم المستلم: ...............................</div>
-                        <div>المعلم المشرف: أ/ محمود عيسى</div>
-                        <div>وكيل المدرسة: أ/ عبدالحميد عثمان عيد</div>
-                        <div>يعتمد، القائم بأعمال مدير المدرسة: أ/ مسعود مخيمر</div>
+                        <div>وكيل المدرسة: أ/ عبد الحميد عثمان عيد</div>
+                        <div>يعتمد، القائم بأعمال مدير المدرسة: أ/ مسعود محمد مخيمر</div>
                     </div>
                 </div>
             </div>
@@ -1685,22 +1705,18 @@
 
             <!-- تذييل الطباعة الرسمي المتكامل مع القيادات المعتمدة وخاتم النسر -->
             <div class="print-official-signatures">
-                <div class="sig-col">
-                    <div>المعلم المشرف</div>
-                    <div class="sig-name">أ/ محمود محمد عبد الوهاب عيسى</div>
-                </div>
-                <div class="sig-col">
+                <div class="sig-col" style="width: 33%;">
                     <div>وكيل المدرسة</div>
-                    <div class="sig-name">أ/ عبدالحميد عثمان عيد</div>
+                    <div class="sig-name">أ/ عبد الحميد عثمان عيد</div>
                 </div>
-                <div class="sig-col">
+                <div class="sig-col" style="width: 33%;">
                     <div class="seal-box">
                         موضع خاتم المدرسة الرسمي
                     </div>
                 </div>
-                <div class="sig-col">
+                <div class="sig-col" style="width: 33%;">
                     <div>يعتمد ،، القائم بأعمال مدير المدرسة</div>
-                    <div class="sig-name">أ/ مسعود مخيمر</div>
+                    <div class="sig-name">أ/ مسعود محمد مخيمر</div>
                 </div>
             </div>
 
@@ -2029,7 +2045,7 @@
         // قاعدة بيانات المعلمين الافتراضية
         const defaultTeachers = {
             "1099013298": { code: "1099013298", name: "آمال إبراهيم محمد حامد", nationalId: "30201121203943", jobTitle: "معلمة خدمات (برمجة وحاسب آلي)", qualification: "بكالوريوس تربية نوعية (شعبة تكنولوجيا التعليم)", subject: "برمجة وحاسب آلي + ثقافة مالية (فصول الخدمات)", phone: "01099013298", quotaHours: 12, mandateNote: "معلمة خدمات - حصص المعلم س كاملة (12 حصة بمدرستنا)", classes: [{ title: "برمجة - الثاني الثانوي خدمات", details: "فصل (7/2) - (1 فصل × 6 حصص)", hours: 6 }, { title: "ثقافة مالية - الثاني الثانوي خدمات", details: "فصل (7/2) - (1 فصل × 2 حصة)", hours: 2 }, { title: "برمجة - الأول الثانوي خدمات", details: "فصل (8/1) - (1 فصل × 4 حصص)", hours: 4 }] },
-            "2589631": { code: "2589631", name: "محمود محمد عبد الوهاب عيسى", nationalId: "28801011200000", jobTitle: "أستاذ البرمجة والذكاء الاصطناعي (المعلم المشرف)", qualification: "بكالوريوس نوعية / حاسب آلي ونظم", subject: "برمجة وذكاء اصطناعي + ثقافة مالية", phone: "01000000000", quotaHours: 16, mandateNote: "معلم أساسي بالمدرسة (المسند 16 حصة - النصاب 14 - زيادة حصتين +2)", classes: [{ title: "ثقافة مالية - الثاني الثانوي", details: "فصل (1/2) - (1 فصل × 2 حصة)", hours: 2 }, { title: "برمجة - الثاني الثانوي منتظم", details: "فصل (6/2) - (1 فصل × 6 حصص)", hours: 6 }, { title: "برمجة - الأول الثانوي منتظم", details: "فصول (1/1 ، 6/1) - (2 فصل × 4 حصص = 8 حصص)", hours: 8 }] },
+            "2589631": { code: "2589631", name: "محمود محمد عبد الوهاب عيسى", nationalId: "28801011200000", jobTitle: "أستاذ البرمجة والذكاء الاصطناعي", qualification: "بكالوريوس نوعية / حاسب آلي ونظم", subject: "برمجة وذكاء اصطناعي + ثقافة مالية", phone: "01000000000", quotaHours: 16, mandateNote: "معلم أساسي بالمدرسة (المسند 16 حصة - النصاب 14 - زيادة حصتين +2)", classes: [{ title: "ثقافة مالية - الثاني الثانوي", details: "فصل (1/2) - (1 فصل × 2 حصة)", hours: 2 }, { title: "برمجة - الثاني الثانوي منتظم", details: "فصل (6/2) - (1 فصل × 6 حصص)", hours: 6 }, { title: "برمجة - الأول الثانوي منتظم", details: "فصول (1/1 ، 6/1) - (2 فصل × 4 حصص = 8 حصص)", hours: 8 }] },
             "1452369": { code: "1452369", name: "منى جلال السيد هيكل", nationalId: "28503141200000", jobTitle: "معلم أول إعدادي", qualification: "بكالوريوس تربية / تخصص تكنولوجيا", subject: "برمجة وأولى ثانوي + ثقافة مالية", phone: "01020000000", quotaHours: 14, mandateNote: "منتدبة جزئياً من التعليم الإعدادي (مسند لها 5 حصص بمدرستها الإعدادية الأصلية)", classes: [{ title: "ثقافة مالية - الثاني الثانوي", details: "فصل (2/2) - (1 فصل × 2 حصة)", hours: 2 }, { title: "برمجة - الأول الثانوي منتظم", details: "فصول (2/1 ، 4/1 ، 5/1) - (3 فصول × 4 حصص = 12 حصة)", hours: 12 }] },
             "1785412": { code: "1785412", name: "مروة محمد السيد عامر", nationalId: "29007201200000", jobTitle: "معلم أول أ ابتدائي", qualification: "بكالوريوس تكنولوجيا التعليم", subject: "برمجة وذكاء اصطناعي - الأول الثانوي منتظم", phone: "01030000000", quotaHours: 8, mandateNote: "منتدبة جزئياً من التعليم الابتدائي (مسند لها 12 حصة بمدرستها الابتدائية الأصلية)", classes: [{ title: "برمجة - الأول الثانوي منتظم", details: "فصول (3/1 ، 7/1) - (2 فصل × 4 حصص = 8 حصص)", hours: 8 }] },
             "1369852": { code: "1369852", name: "منى العيوطي", nationalId: "28609181200000", jobTitle: "معلم", qualification: "مؤهل عالي مناسب", subject: "ثقافة مالية - الثاني الثانوي", phone: "01040000000", quotaHours: 4, mandateNote: "تغطية عجز بمدرستنا (المسند 4 حصص)", classes: [{ title: "ثقافة مالية - الثاني الثانوي", details: "فصول (6/2 ، 3/2) - (2 فصل × 2 حصة = 4 حصص)", hours: 4 }] },
@@ -2041,7 +2057,7 @@
             { name: "أ/ السيدة عطا", roleNote: "معلم", classesDesc: "ثقافة مالية - الثاني الثانوي (فصول 4/2 ، 5/2) (2 فصل × 2 حصة)", classesCount: 2, assignedHours: 4, officialTarget: "-", mandateInfo: "تغطية عجز بمدرستنا فقط (لا يوجد ندب خارجي)", statement: "تغطية العجز" },
             { name: "أ/ مروة محمد السيد عامر", roleNote: "معلم أول أ ابتدائي", classesDesc: "برمجة - الأول الثانوي منتظم (فصول 3/1 ، 7/1) (2 فصل × 4 حصص)", classesCount: 2, assignedHours: 8, officialTarget: "20", mandateInfo: "منتدبة من التعليم الابتدائي | لديها 12 حصة بمدرستها الابتدائية الأصلية لاستكمال نصابها (20 حصة)", statement: "أقل بـ 12 حصة بمدرستنا" },
             { name: "أ/ منى جلال السيد هيكل", roleNote: "معلم أول إعدادي", classesDesc: "ثقافة مالية - الثاني الثانوي (فصل 2/2) (1 فصل × 2 حصة) + برمجة - الأول الثانوي منتظم (فصول 2/1 ، 4/1 ، 5/1) (3 فصول × 4 حصص = 12 حصة)", classesCount: 4, assignedHours: 14, officialTarget: "19", mandateInfo: "منتدبة من التعليم الإعدادي | لديها 5 حصص بمدرستها الإعدادية الأصلية لاستكمال نصابها (19 حصة)", statement: "أقل بـ 5 حصص بمدرستنا" },
-            { name: "أ/ محمود محمد عبد الوهاب عيسى", roleNote: "أستاذ البرمجة والمعلم المشرف", classesDesc: "ثقافة مالية - الثاني الثانوي (فصل 1/2) (1 فصل × 2 حصة) + برمجة - الثاني الثانوي منتظم (فصل 6/2) (1 فصل × 6 حصص) + برمجة - الأول الثانوي منتظم (فصول 1/1 ، 6/1) (2 فصل × 4 حصص = 8 حصص)", classesCount: 4, assignedHours: 16, officialTarget: "14", mandateInfo: "معلم أساسي بمدرسة محمد هاشم النقيب الثانوية (زيادة حصتين +2 عن النصاب)", statement: "زيادة حصتين (+2)" },
+            { name: "أ/ محمود محمد عبد الوهاب عيسى", roleNote: "أستاذ البرمجة والذكاء الاصطناعي", classesDesc: "ثقافة مالية - الثاني الثانوي (فصل 1/2) (1 فصل × 2 حصة) + برمجة - الثاني الثانوي منتظم (فصل 6/2) (1 فصل × 6 حصص) + برمجة - الأول الثانوي منتظم (فصول 1/1 ، 6/1) (2 فصل × 4 حصص = 8 حصص)", classesCount: 4, assignedHours: 16, officialTarget: "14", mandateInfo: "معلم أساسي بمدرسة محمد هاشم النقيب الثانوية (زيادة حصتين +2 عن النصاب)", statement: "زيادة حصتين (+2)" },
             { name: "أ/ آمال إبراهيم محمد حامد", roleNote: "معلمة خدمات - حصص المعلم س كاملة", classesDesc: "برمجة - الثاني الثانوي خدمات (فصل 7/2) (1 فصل × 6 حصص) + ثقافة مالية - الثاني الثانوي خدمات (فصل 7/2) (1 فصل × 2 حصة) + برمجة - الأول الثانوي خدمات (فصل 8/1) (1 فصل × 4 حصص)", classesCount: 3, assignedHours: 12, officialTarget: "-", mandateInfo: "مكلفة بفصول الخدمات (المعلم س سابقاً) بمجموع 12 حصة كاملة بمدرستنا", statement: "تغطية العجز كاملة (12 حصة)" }
         ];
 
@@ -2198,14 +2214,14 @@
             submissions.push(latestSubmission);
             localStorage.setItem("mhn_submissions", JSON.stringify(submissions));
 
-            // الإرسال السحابي
+            // الإرسال السحابي (حل مشكلة التطبيق Google Sheets Sync عبر تغيير Content-Type)
             const gasUrl = localStorage.getItem("mhn_gas_webhook");
             if (gasUrl) {
                 try {
                     fetch(gasUrl, {
                         method: "POST",
                         mode: "no-cors",
-                        headers: { "Content-Type": "application/json" },
+                        headers: { "Content-Type": "text/plain;charset=utf-8" },
                         body: JSON.stringify(latestSubmission)
                     }).catch(err => console.log("Silent cloud sync error:", err));
                 } catch (err) {
@@ -2237,7 +2253,53 @@
 
         function printReceiptDirect() {
             closeCelebrationModal();
-            printActiveRecord(`إيصال تعهد واستلام المعلم: ${latestSubmission ? latestSubmission.name : ''}`);
+            
+            // تهيئة إيصال الطباعة المخصص وحل مشكلة عدم ظهوره
+            const receiptSection = document.getElementById("receiptPrintSection");
+            receiptSection.innerHTML = `
+                <h2 style="text-align: center; margin-bottom: 25px; color: #000; border-bottom: 2px solid #000; padding-bottom: 10px;">إيصال استيفاء بيانات المعلم والتعهد الرسمي</h2>
+                <div style="border: 2px dashed #000; padding: 25px; border-radius: 15px; font-size: 14pt; line-height: 2; margin-bottom: 40px; color: #000;">
+                    <div style="display: flex; justify-content: space-between; border-bottom: 1px solid #ccc; margin-bottom: 15px;">
+                        <strong>اسم المعلم:</strong> <span>${latestSubmission.name}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; border-bottom: 1px solid #ccc; margin-bottom: 15px;">
+                        <strong>الوظيفة والتخصص:</strong> <span>${latestSubmission.jobTitle}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; border-bottom: 1px solid #ccc; margin-bottom: 15px;">
+                        <strong>المادة المسندة:</strong> <span>${latestSubmission.subject}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; border-bottom: 1px solid #ccc; margin-bottom: 15px;">
+                        <strong>موقف دفتر التحضير:</strong> <span>${latestSubmission.prepBook}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; border-bottom: 1px solid #ccc; margin-bottom: 15px;">
+                        <strong>موقف سجل الدرجات:</strong> <span>${latestSubmission.gradeRecord}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; border-bottom: 1px solid #ccc; margin-bottom: 15px;">
+                        <strong>استلام الجدول:</strong> <span>${latestSubmission.timetable}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; border-bottom: 1px solid #ccc; margin-bottom: 15px;">
+                        <strong>التعهد الرسمي:</strong> <span>${latestSubmission.legalPledge}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <strong>تاريخ واعتماد الحفظ:</strong> <span>${latestSubmission.timestamp}</span>
+                    </div>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-top: 50px; font-weight: bold; font-size: 14pt; color: #000;">
+                    <div>توقيع المعلم المقر: ...............................</div>
+                    <div>وكيل المدرسة: أ/ عبد الحميد عثمان عيد</div>
+                    <div>يعتمد، القائم بأعمال مدير المدرسة: أ/ مسعود محمد مخيمر</div>
+                </div>
+            `;
+            
+            document.body.classList.add("print-receipt-mode");
+            document.getElementById("adminModal").classList.add("active");
+            
+            printActiveRecord(`إيصال تعهد واستلام المعلم: ${latestSubmission.name}`);
+            
+            setTimeout(() => {
+                document.body.classList.remove("print-receipt-mode");
+                receiptSection.innerHTML = "";
+            }, 1000);
         }
 
         function openLoginDialog() {
@@ -2496,7 +2558,13 @@
             a.click();
         }
 
-        /* 4. جدول المعلم المستقل */
+        /* 4. تصحيح جدول المعلم المستقل */
+        function isTeacherMatch(shortName, fullName) {
+            if (!shortName || !fullName || shortName === '-') return false;
+            const sNameParts = shortName.replace("أ/ ", "").trim().split(" ");
+            return sNameParts.every(part => fullName.includes(part));
+        }
+
         function renderIndividualSchedule(code) {
             const teachers = getTeachersData();
             const teacher = teachers[code];
@@ -2514,7 +2582,7 @@
                 for (let i = 1; i <= 7; i++) {
                     const cell = dayRow ? dayRow[`p${i}`] : null;
                     let display = "-";
-                    if (cell && cell.t && cell.t.includes(teacher.name.split(" ")[1] || teacher.name.split(" ")[0])) {
+                    if (cell && cell.t && isTeacherMatch(cell.t, teacher.name)) {
                         display = `<b>${cell.c}</b>`;
                     }
                     tr.innerHTML += `<td class="timetable-cell">${display}</td>`;
@@ -2755,7 +2823,7 @@
             const url = localStorage.getItem("mhn_gas_webhook") || document.getElementById("gasWebhookUrl").value.trim();
             if (!url) { alert("أدخل الرابط أولاً!"); return; }
             try {
-                await fetch(url, { method: "POST", mode: "no-cors", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ test: true }) });
+                await fetch(url, { method: "POST", mode: "no-cors", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ test: true }) });
                 alert("تم إرسال طلب المزامنة بنجاح!");
             } catch (err) { alert("خطأ: " + err.message); }
         }
@@ -2788,4 +2856,3 @@
     </script>
 </body>
 </html>
-
