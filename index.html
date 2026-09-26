@@ -2490,10 +2490,47 @@
             }
         }
 
+        function savePendingCloudSync(actionType = null, payloadData = null) {
+            localStorage.setItem("mhn_pending_cloud_sync", JSON.stringify({
+                action: actionType,
+                payload: payloadData,
+                queuedAt: new Date().toISOString()
+            }));
+        }
+
+        function clearPendingCloudSync() {
+            localStorage.removeItem("mhn_pending_cloud_sync");
+        }
+
+        async function fetchCloudDatabase() {
+            const url = getConfiguredCloudUrl();
+            if (!url) throw new Error("رابط Google Apps Script غير مضبوط.");
+            const response = await fetchWithTimeout(
+                url + (url.includes("?") ? "&" : "?") + "action=getData&_=" + Date.now(),
+                { method: "GET" }
+            );
+            if (!response.ok) throw new Error("تعذر قراءة Google Sheets. HTTP " + response.status);
+            const raw = await response.text();
+            if (!raw || raw.trim() === "" || raw.trim() === "null") {
+                throw new Error("Google Sheets أعاد استجابة فارغة.");
+            }
+            const parsed = JSON.parse(raw);
+            if (parsed && parsed.ok === false) {
+                throw new Error(parsed.error || "تعذر قراءة البيانات من Google Sheets.");
+            }
+            return normalizeCloudDatabase(parsed);
+        }
+
+        function databasesMatch(localDb, cloudDb) {
+            return stableStringify(normalizeCloudDatabase(localDb)) ===
+                stableStringify(normalizeCloudDatabase(cloudDb));
+        }
+
         async function syncDatabaseToCloud(actionType = null, payloadData = null) {
             const url = getConfiguredCloudUrl();
             if (!url) {
-                setSyncStatus("لم يتم ضبط رابط Google Apps Script.", true);
+                savePendingCloudSync(actionType, payloadData);
+                setSyncStatus("لم يتم ضبط رابط Google Apps Script؛ تم حفظ البيانات محلياً بانتظار المزامنة.", true);
                 return { ok: false, error: "رابط المزامنة غير موجود." };
             }
 
@@ -2506,102 +2543,73 @@
                 .catch(() => null)
                 .then(async () => {
                     let lastError = null;
-
                     for (let attempt = 0; attempt <= CLOUD_SYNC_CONFIG.maxRetries; attempt++) {
                         try {
+                            setSyncStatus(attempt ? `إعادة المحاولة ${attempt} من ${CLOUD_SYNC_CONFIG.maxRetries}...` : "جارٍ حفظ البيانات على Google Sheets...");
                             const response = await fetchWithTimeout(url, {
                                 method: "POST",
                                 headers: { "Content-Type": "text/plain;charset=utf-8" },
                                 body: JSON.stringify(postData)
                             });
-
                             const text = await response.text();
                             let result = null;
                             try { result = text ? JSON.parse(text) : null; } catch (_) {}
-
-                            if (!response.ok) {
-                                throw new Error("استجابة الخادم HTTP " + response.status);
-                            }
+                            if (!response.ok) throw new Error("استجابة الخادم HTTP " + response.status);
                             if (result && result.ok === false) {
-                                throw new Error(result.error || "رفض الخادم عملية الحفظ.");
+                                throw new Error(result.error || "رفض Google Sheets عملية الحفظ.");
                             }
 
-                            setSyncStatus("تم إرسال البيانات إلى السحابة بنجاح.");
-                            return { ok: true, result };
+                            // تحقق مستقل: إعادة قراءة Google Sheets ومطابقة قاعدة البيانات بعد POST.
+                            const cloudDb = await fetchCloudDatabase();
+                            if (!databasesMatch(snapshot, cloudDb)) {
+                                throw new Error("تم الإرسال لكن لم تتطابق البيانات عند التحقق من Google Sheets.");
+                            }
+                            clearPendingCloudSync();
+                            setSyncStatus("تم الحفظ والمزامنة والتحقق من Google Sheets بنجاح.");
+                            return { ok: true, result, verified: true };
                         } catch (error) {
                             lastError = error;
                             if (attempt < CLOUD_SYNC_CONFIG.maxRetries) {
-                                await new Promise(resolve =>
-                                    setTimeout(resolve, CLOUD_SYNC_CONFIG.retryDelayMs * (attempt + 1))
-                                );
+                                await new Promise(resolve => setTimeout(resolve, CLOUD_SYNC_CONFIG.retryDelayMs * (attempt + 1)));
                             }
                         }
                     }
-
-                    setSyncStatus(
-                        "تعذرت المزامنة: " + String(lastError && lastError.message || lastError),
-                        true
-                    );
-                    throw lastError || new Error("فشلت المزامنة.");
+                    savePendingCloudSync(actionType, payloadData);
+                    setSyncStatus("تعذرت المزامنة؛ البيانات محفوظة محلياً وستتم إعادة المحاولة لاحقاً: " + String(lastError && lastError.message || lastError), true);
+                    return { ok: false, error: String(lastError && lastError.message || lastError), queued: true };
                 });
-
             return cloudSyncQueue;
         }
 
         async function fetchCloudDataOnLoad() {
             const url = getConfiguredCloudUrl();
             if (!url) {
-                setSyncStatus("أدخل رابط Google Apps Script أولًا.", true);
+                setSyncStatus("أدخل رابط Google Apps Script أولاً.", true);
                 return false;
             }
-
             try {
-                setSyncStatus("جارٍ استيراد البيانات من Google Sheets...");
-                const response = await fetchWithTimeout(
-                    url + (url.includes("?") ? "&" : "?") + "action=getData&_=" + Date.now(),
-                    { method: "GET" }
-                );
-
-                if (!response.ok) {
-                    throw new Error("تعذر جلب البيانات. HTTP " + response.status);
-                }
-
-                const raw = await response.text();
-                if (!raw || raw.trim() === "" || raw.trim() === "null") {
-                    throw new Error("الخادم أعاد استجابة فارغة.");
-                }
-
-                const parsed = JSON.parse(raw);
-                if (parsed && parsed.ok === false) {
-                    throw new Error(parsed.error || "تعذر قراءة قاعدة البيانات.");
-                }
-
-                const cloudDb = normalizeCloudDatabase(parsed);
-
+                setSyncStatus("جارٍ استيراد البيانات تلقائياً من Google Sheets...");
+                const cloudDb = await fetchCloudDatabase();
                 if (hasCloudRecords(cloudDb)) {
                     saveLocalDatabase(cloudDb);
                     cloudHydrationCompleted = true;
                     renderAllDashboardData();
-                    setSyncStatus("تم استيراد البيانات من السحابة بنجاح.");
+                    setSyncStatus("تم استيراد البيانات تلقائياً من Google Sheets وظهرت في لوحة التحكم.");
                     return true;
                 }
 
                 const localDb = readLocalDatabase();
                 if (hasCloudRecords(localDb)) {
-                    await syncDatabaseToCloud("initial_seed");
-                    setSyncStatus("قاعدة السحابة فارغة؛ تم إرسال البيانات المحلية الأولية.");
+                    const seeded = await syncDatabaseToCloud("initial_seed");
+                    if (!seeded.ok) return false;
+                    setSyncStatus("Google Sheets فارغ؛ تم إرسال البيانات المحلية والتحقق من حفظها.");
                 } else {
-                    setSyncStatus("تم الاتصال، ولا توجد بيانات مسجلة بعد.");
+                    setSyncStatus("تم الاتصال بـ Google Sheets، ولا توجد بيانات مسجلة بعد.");
                 }
-
                 cloudHydrationCompleted = true;
                 return true;
             } catch (error) {
-                setSyncStatus(
-                    "تعذر استيراد السحابة؛ تم الاحتفاظ بالبيانات المحلية. " +
-                    String(error && error.message || error),
-                    true
-                );
+                setSyncStatus("تعذر الاستيراد حالياً؛ تم الاحتفاظ بالبيانات المحلية: " + String(error && error.message || error), true);
                 return false;
             }
         }
@@ -2762,7 +2770,15 @@
             submissions.push(latestSubmission);
             localStorage.setItem("mhn_submissions", JSON.stringify(submissions));
 
-            syncDatabaseToCloud("new_submission", latestSubmission);
+            const syncResult = await syncDatabaseToCloud("new_submission", latestSubmission);
+            if (!syncResult.ok) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'تم الحفظ محلياً بانتظار المزامنة',
+                    text: 'تم حفظ البيانات على الجهاز، وسيعاد إرسالها تلقائياً عند عودة الاتصال بـ Google Sheets.',
+                    confirmButtonText: 'حسناً'
+                });
+            }
 
             renderSubmissionsTable();
             renderSignaturesTable();
@@ -2882,7 +2898,7 @@
 
         /* 1. السجلات والتعهدات */
         function renderSubmissionsTable() {
-            const submissions = JSON.parse(localStorage.getItem("mhn_submissions")) || [];
+            const submissions = normalizeSubmissions(safeParseLocal("mhn_submissions", []));
             const tbody = document.getElementById("submissionsTableBody");
             tbody.innerHTML = "";
             if (submissions.length === 0) {
@@ -2901,8 +2917,8 @@
                     <td><span class="quota-chip" style="background:rgba(0,229,255,0.15);">${item.timetable}</span></td>
                     <td><span class="quota-chip" style="background:rgba(229,193,88,0.2); color:var(--accent);">${item.legalPledge}</span></td>
                     <td class="no-print">
-                        <button class="btn-action gold" style="padding: 4px 8px; font-size: 0.78rem;" onclick="openEditSubModal(${item.id})"><i class="fa-solid fa-pen"></i></button>
-                        <button class="btn-action danger" style="padding: 4px 8px; font-size: 0.78rem;" onclick="deleteSubmission(${item.id})"><i class="fa-solid fa-trash"></i></button>
+                        <button type="button" class="btn-action gold" style="padding: 4px 8px; font-size: 0.78rem;" onclick="openEditSubModal(${JSON.stringify(item.id ?? '')})"><i class="fa-solid fa-pen"></i></button>
+                        <button type="button" class="btn-action danger" style="padding: 4px 8px; font-size: 0.78rem;" onclick="deleteSubmission(${JSON.stringify(item.id ?? '')}, ${JSON.stringify(String(item.code || ''))})"><i class="fa-solid fa-trash"></i></button>
                     </td>
                 `;
                 tbody.appendChild(tr);
@@ -2942,8 +2958,8 @@
                 Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'تم حفظ التعديلات بنجاح', showConfirmButton: false, timer: 1500 });
             }
         }
-        function deleteSubmission(id) {
-            Swal.fire({
+        async function deleteSubmission(id, code = "") {
+            const result = await Swal.fire({
                 title: 'تأكيد الحذف',
                 text: "هل تريد حذف هذا الإقرار نهائياً؟",
                 icon: 'warning',
@@ -2952,18 +2968,54 @@
                 cancelButtonColor: '#0d6efd',
                 confirmButtonText: 'نعم، احذف الإقرار',
                 cancelButtonText: 'إلغاء'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    let submissions = normalizeSubmissions(safeParseLocal("mhn_submissions", []));
-                    submissions = submissions.filter(s => String(s.id) !== String(id));
-                    localStorage.setItem("mhn_submissions", JSON.stringify(submissions));
-                    renderSubmissionsTable();
-                    renderSignaturesTable();
-                    updateStatistics();
-                    syncDatabaseToCloud();
-                    Swal.fire('تم الحذف!', 'تم حذف الإقرار بنجاح.', 'success');
-                }
             });
+            if (!result.isConfirmed) return;
+
+            const targetId = String(id ?? '').trim();
+            const targetCode = String(code ?? '').trim();
+            let submissions = normalizeSubmissions(safeParseLocal("mhn_submissions", []));
+            const beforeCount = submissions.length;
+            submissions = submissions.filter(item => {
+                const sameId = targetId !== '' && String(item.id ?? '').trim() === targetId;
+                const sameCode = targetCode !== '' && String(item.code ?? '').trim() === targetCode;
+                return !(sameId || sameCode);
+            });
+
+            if (submissions.length === beforeCount) {
+                await Swal.fire({
+                    icon: 'info',
+                    title: 'السجل غير موجود',
+                    text: 'تعذر العثور على السجل محلياً؛ ربما تم حذفه مسبقاً أو لم تكتمل المزامنة.',
+                    confirmButtonText: 'حسناً'
+                });
+                renderSubmissionsTable();
+                return;
+            }
+
+            localStorage.setItem("mhn_submissions", JSON.stringify(submissions));
+            renderSubmissionsTable();
+            renderSignaturesTable();
+            updateStatistics();
+
+            try {
+                await syncDatabaseToCloud("delete_submission", { id: targetId, code: targetCode });
+                await Swal.fire({
+                    icon: 'success',
+                    title: 'تم الحذف بنجاح',
+                    text: 'تم حذف سجل الإدخال وتحديث الجداول المحلية.',
+                    confirmButtonText: 'حسناً',
+                    timer: 2200,
+                    timerProgressBar: true
+                });
+            } catch (error) {
+                // الحذف المحلي يظل محفوظاً حتى عند تعذر الاتصال بالسحابة.
+                await Swal.fire({
+                    icon: 'warning',
+                    title: 'تم الحذف محلياً',
+                    text: 'تم حذف السجل من الجهاز، لكن تعذر إرسال التحديث للسحابة حالياً. يمكنك إعادة المزامنة لاحقاً.',
+                    confirmButtonText: 'حسناً'
+                });
+            }
         }
 
         /* 2. توزيع الحصص والانتداب */
@@ -3480,8 +3532,9 @@
             });
             
             try {
-                await syncDatabaseToCloud("manual_test");
-                Swal.fire('اكتمل بنجاح', 'اكتمل إرسال طلب المزامنة. راجع سجل العمليات في Google Sheets للتأكد من الحفظ.', 'success');
+                const syncResult = await syncDatabaseToCloud("manual_test");
+                if (!syncResult.ok) throw new Error(syncResult.error || "لم يكتمل التحقق من Google Sheets.");
+                Swal.fire('اكتمل بنجاح', 'تم الحفظ والتحقق من تطابق البيانات مع Google Sheets.', 'success');
             } catch (err) {
                 Swal.fire('خطأ في المزامنة', "تعذرت المزامنة: " + String(err && err.message || err), 'error');
             }
@@ -3522,7 +3575,17 @@
             if (webhookInput) {
                 webhookInput.value = getConfiguredCloudUrl();
             }
-            await fetchCloudDataOnLoad();
+            const pendingSync = safeParseLocal("mhn_pending_cloud_sync", null);
+            if (pendingSync) {
+                await syncDatabaseToCloud(pendingSync.action || "retry_pending", pendingSync.payload || null);
+            }
+            // لا نستبدل البيانات المحلية الجديدة بنسخة سحابية قديمة إذا بقيت مزامنة معلّقة.
+            if (safeParseLocal("mhn_pending_cloud_sync", null)) {
+                renderAllDashboardData();
+                setSyncStatus("توجد بيانات محلية محفوظة بانتظار الاتصال؛ تم إبقاؤها دون استبدال.", true);
+            } else {
+                await fetchCloudDataOnLoad();
+            }
         });
     </script>
 </body>
