@@ -1373,7 +1373,7 @@
             <p>أدخل كلمة المرور السرية المعتمدة للوصول لكافة السجلات والتقارير</p>
             <input type="password" id="adminPasswordInput" class="form-control" placeholder="كلمة المرور..." style="margin-bottom: 20px; text-align: center; letter-spacing: 2px;">
             <div style="display: flex; gap: 10px;">
-                <button class="btn-admin-gate" style="flex: 1; justify-content: center;" onclick="verifyAdminPassword()">دخول</button>
+                <button class="btn-admin-gate" id="btnLoginAdmin" style="flex: 1; justify-content: center;" onclick="verifyAdminPassword()">دخول</button>
                 <button class="btn-action danger" onclick="closeLoginDialog()">إلغاء</button>
             </div>
             <div id="loginError" style="color: var(--danger); font-weight: bold; margin-top: 15px; display: none;">كلمة المرور غير صحيحة! حاول ثانية.</div>
@@ -2086,7 +2086,7 @@
         function getMasterSchedule() { return JSON.parse(localStorage.getItem("mhn_master_schedule")) || defaultMasterSchedule; }
         function saveMasterSchedule(data) { localStorage.setItem("mhn_master_schedule", JSON.stringify(data)); }
 
-        // دالة المزامنة السحابية (ترسل قاعدة البيانات بالكامل مع أي تعديل)
+        // دالة المزامنة السحابية (ترسل قاعدة البيانات بالكامل مع أي تعديل وتطابق صيغ Payload مع سكريبت جوجل)
         function syncDatabaseToCloud(actionType = null, payloadData = null) {
             const url = localStorage.getItem("mhn_gas_webhook");
             if (!url) return;
@@ -2106,22 +2106,22 @@
             if (actionType) postData.action = actionType;
             if (payloadData) postData.payload = payloadData;
 
-            // إرسال البيانات كـ text/plain لتخطي مشاكل CORS في Google Apps Script[span_0](start_span)[span_0](end_span)
+            // إرسال البيانات كـ text/plain لتخطي مشاكل CORS في المتصفحات وبنية البيانات متطابقة مع كود جوجل شيتس
             fetch(url, {
                 method: "POST",
                 headers: { "Content-Type": "text/plain;charset=utf-8" },
                 body: JSON.stringify(postData)
-            }).then(res => console.log("تمت المزامنة السحابية الصامتة بنجاح"))
-              .catch(err => console.log("خطأ في المزامنة (محفوظ محلياً فقط):", err));
+            }).then(res => console.log("تمت المزامنة السحابية بنجاح وتسجيل البيانات في جوجل شيت"))
+              .catch(err => console.log("خطأ في المزامنة:", err));
         }
 
-        // دالة جلب البيانات من السحابة عند فتح المتصفح
+        // دالة جلب البيانات من السحابة (تتصل بـ doGet في Google Script)
         async function fetchCloudDataOnLoad() {
             const url = localStorage.getItem("mhn_gas_webhook");
             if (!url) return;
 
             try {
-                // جلب البيانات بناءً على دالة doGet الموجودة في الكود الخاص بك[span_1](start_span)[span_1](end_span)
+                // استيراد البيانات استناداً لمعامل action=getData الموضح في الكود
                 const response = await fetch(url + "?action=getData");
                 if (response.ok) {
                     const dbStr = await response.text();
@@ -2134,7 +2134,7 @@
                         if (cloudData.submissions) localStorage.setItem("mhn_submissions", JSON.stringify(cloudData.submissions));
                         if (cloudData.evaluations) localStorage.setItem("mhn_evaluations", JSON.stringify(cloudData.evaluations));
 
-                        // إعادة رسم الواجهة بالبيانات الجديدة القادمة من السحابة
+                        // إعادة رسم الواجهة
                         populateSelectTeacherDropdown();
                         populateIndividualTeacherDropdown();
                         renderTeachersRegistry();
@@ -2144,7 +2144,7 @@
                         renderSubmissionsTable();
                         renderEvaluationsTable();
                         updateStatistics();
-                        console.log("تم سحب البيانات من السحابة بنجاح!");
+                        console.log("تم استيراد البيانات من السحابة بنجاح!");
                     }
                 }
             } catch (error) {
@@ -2253,6 +2253,16 @@
             e.preventDefault();
 
             const code = document.getElementById("teacherCode").value.trim();
+            
+            // --- ميزة منع التكرار وإجبار التعديل من خلال لوحة التحكم فقط ---
+            let submissions = JSON.parse(localStorage.getItem("mhn_submissions")) || [];
+            const isExist = submissions.some(s => s.code === code);
+            if(isExist) {
+                alert("تم إرسال إقرار هذا المعلم مسبقاً! ⛔\nلتجنب تكرار البيانات، لا يمكن الإرسال مرة أخرى. يرجى التوجه للوحة التحكم للتعديل.");
+                return;
+            }
+            // ------------------------------------------------------------------
+
             const name = document.getElementById("teacherName").value.trim();
             const nationalId = document.getElementById("nationalId").value.trim();
             const jobTitle = document.getElementById("teacherJobTitle").value.trim();
@@ -2279,12 +2289,10 @@
                 timestamp: new Date().toLocaleString('ar-EG')
             };
 
-            let submissions = JSON.parse(localStorage.getItem("mhn_submissions")) || [];
-            submissions = submissions.filter(s => s.code !== code);
             submissions.push(latestSubmission);
             localStorage.setItem("mhn_submissions", JSON.stringify(submissions));
 
-            // تشغيل المزامنة السحابية الجذرية فوراً ليتم إدراج الصف في جوجل شيت وحفظ قاعدة البيانات
+            // تشغيل المزامنة السحابية مع إرسال Payload خاص لإضافة صف جديد في جوجل شيت
             syncDatabaseToCloud("new_submission", latestSubmission);
 
             renderSubmissionsTable();
@@ -2367,9 +2375,22 @@
         }
         function closeLoginDialog() { document.getElementById("loginDialog").classList.remove("active"); }
 
-        function verifyAdminPassword() {
+        // تم ربط استيراد البيانات التلقائي بحدث فتح لوحة التحكم
+        async function verifyAdminPassword() {
             const pass = document.getElementById("adminPasswordInput").value.trim();
             if (pass === "mrmahmoud2026") {
+                const btn = document.getElementById("btnLoginAdmin");
+                const originalText = btn.innerHTML;
+                
+                // عرض مؤشر التحميل والاستيراد
+                btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> جاري استيراد البيانات السحابية...`;
+                btn.disabled = true;
+
+                // تحديث البيانات من السحابة قبل عرض اللوحة
+                await fetchCloudDataOnLoad();
+
+                btn.innerHTML = originalText;
+                btn.disabled = false;
                 closeLoginDialog();
                 document.getElementById("adminModal").classList.add("active");
                 renderSubmissionsTable();
@@ -2451,7 +2472,8 @@
                 closeSubModal();
                 renderSubmissionsTable();
                 renderSignaturesTable();
-                syncDatabaseToCloud(); // تشغيل المزامنة
+                // المزامنة بعد التعديل لرفع التحديث للسحابة دون إضافة صف جديد
+                syncDatabaseToCloud("update_submission", item);
             }
         }
         function deleteSubmission(id) {
@@ -2462,7 +2484,7 @@
                 renderSubmissionsTable();
                 renderSignaturesTable();
                 updateStatistics();
-                syncDatabaseToCloud(); // تشغيل المزامنة
+                syncDatabaseToCloud(); // تحديث قاعدة البيانات السحابية بعد الحذف
             }
         }
 
@@ -2552,7 +2574,7 @@
             saveQuotaData(quotaList);
             closeQuotaModal();
             renderQuotaTable();
-            syncDatabaseToCloud(); // تشغيل المزامنة
+            syncDatabaseToCloud();
         }
         function deleteQuotaRow(idx) {
             if (confirm("هل تريد حذف هذا البيان؟")) {
@@ -2560,7 +2582,7 @@
                 list.splice(idx, 1);
                 saveQuotaData(list);
                 renderQuotaTable();
-                syncDatabaseToCloud(); // تشغيل المزامنة
+                syncDatabaseToCloud();
             }
         }
         function exportQuotaCSV() {
@@ -2610,7 +2632,7 @@
             saveMasterSchedule(sched);
             closeCellEditModal();
             renderMasterTimetable();
-            syncDatabaseToCloud(); // تشغيل المزامنة
+            syncDatabaseToCloud();
         }
         function exportMasterScheduleJSON() {
             const blob = new Blob([JSON.stringify(getMasterSchedule(), null, 2)], { type: "application/json" });
@@ -2732,14 +2754,14 @@
             closeTeacherModal();
             populateSelectTeacherDropdown(); populateIndividualTeacherDropdown();
             renderTeachersRegistry(); renderSignaturesTable(); updateStatistics();
-            syncDatabaseToCloud(); // تشغيل المزامنة
+            syncDatabaseToCloud();
         }
         function deleteTeacher(code) {
             if (confirm("حذف المعلم نهائياً؟")) {
                 const teachers = getTeachersData(); delete teachers[code]; saveTeachersData(teachers);
                 populateSelectTeacherDropdown(); populateIndividualTeacherDropdown();
                 renderTeachersRegistry(); renderSignaturesTable(); updateStatistics();
-                syncDatabaseToCloud(); // تشغيل المزامنة
+                syncDatabaseToCloud();
             }
         }
         function exportTeachersCSV() {
@@ -2822,13 +2844,13 @@
             } else evals.push(newEval);
             localStorage.setItem("mhn_evaluations", JSON.stringify(evals));
             closeEvalModal(); renderEvaluationsTable();
-            syncDatabaseToCloud(); // تشغيل المزامنة
+            syncDatabaseToCloud();
         }
         function deleteEval(id) {
             if(confirm("حذف التقييم؟")) {
                 localStorage.setItem("mhn_evaluations", JSON.stringify((JSON.parse(localStorage.getItem("mhn_evaluations"))||[]).filter(e => e.id !== id)));
                 renderEvaluationsTable();
-                syncDatabaseToCloud(); // تشغيل المزامنة
+                syncDatabaseToCloud();
             }
         }
         function exportEvaluationsCSV() {
@@ -2891,7 +2913,7 @@
             try {
                 // إجبار تشغيل دالة المزامنة السحابية الجذرية للاختبار
                 syncDatabaseToCloud();
-                alert("تم إرسال طلب المزامنة السحابية الشاملة! تحقق من الشيت.");
+                alert("تم إرسال طلب المزامنة السحابية الشاملة بنجاح!");
             } catch (err) { alert("خطأ: " + err.message); }
         }
         function exportBackupJson() {
@@ -2918,13 +2940,10 @@
             if(event.target.files[0]) reader.readAsText(event.target.files[0]);
         }
 
-        // عند فتح الصفحة، تهيئة النظام ثم جلب البيانات من السحابة إذا كانت متوفرة
+        // عند فتح الصفحة، تهيئة النظام
         window.addEventListener("DOMContentLoaded", () => {
             initAppStorage();
             document.getElementById("gasWebhookUrl").value = localStorage.getItem("mhn_gas_webhook") || DEFAULT_GAS_URL;
-            
-            // التشغيل الراديكالي: سحب أحدث بيانات من جوجل شيت فور تحميل الصفحة
-            fetchCloudDataOnLoad();
         });
     </script>
 </body>
