@@ -2057,7 +2057,7 @@
             { name: "أ/ السيدة عطا", roleNote: "معلم", classesDesc: "ثقافة مالية - الثاني الثانوي (فصول 4/2 ، 5/2) (2 فصل × 2 حصة)", classesCount: 2, assignedHours: 4, officialTarget: "-", mandateInfo: "تغطية عجز بمدرستنا فقط (لا يوجد ندب خارجي)", statement: "تغطية العجز" },
             { name: "أ/ مروة محمد السيد عامر", roleNote: "معلم أول أ ابتدائي", classesDesc: "برمجة - الأول الثانوي منتظم (فصول 3/1 ، 7/1) (2 فصل × 4 حصص)", classesCount: 2, assignedHours: 8, officialTarget: "20", mandateInfo: "منتدبة من التعليم الابتدائي | لديها 12 حصة بمدرستها الابتدائية الأصلية لاستكمال نصابها (20 حصة)", statement: "أقل بـ 12 حصة بمدرستنا" },
             { name: "أ/ منى جلال السيد هيكل", roleNote: "معلم أول إعدادي", classesDesc: "ثقافة مالية - الثاني الثانوي (فصل 2/2) (1 فصل × 2 حصة) + برمجة - الأول الثانوي منتظم (فصول 2/1 ، 4/1 ، 5/1) (3 فصول × 4 حصص = 12 حصة)", classesCount: 4, assignedHours: 14, officialTarget: "19", mandateInfo: "منتدبة من التعليم الإعدادي | لديها 5 حصص بمدرستها الإعدادية الأصلية لاستكمال نصابها (19 حصة)", statement: "أقل بـ 5 حصص بمدرستنا" },
-            { name: "أ/ محمود محمد عبد الوهاب عيسى", roleNote: "أستاذ البرمجة والذكاء الاصطناعي", classesDesc: "ثقافة مالية - الثاني الثانوي (فصل 1/2) (1 فصل × 2 حصة) + برمجة - الثاني الثانوي منتظم (فصل 6/2) (1 فصل × 6 حصص) + برمجة - الأول الثانوي منتظم (فصول 1/1 ، 6/1) (2 فصل × 4 حصص = 8 حصص)", classesCount: 4, assignedHours: 16, officialTarget: "14", mandateInfo: "معلم أساسي بمدرسة محمد هاشم النقيب الثانوية (زيادة حصتين +2 عن النصاب)", statement: "زيادة حصتين (+2)" },
+            { name: "أ/ محمود محمد عبد الوهاب عيسى", roleNote: "أستاذ البرمجة والذكاء الاصطناعي", classesDesc: "ثقافة مالية - الثاني الثانوي (فصل 1/2) (1 فصل × 2 حصة) + برمجة - الثاني الثانوي منتظم (فصل 6/2) (1 فصل × 6 حصص) + برمجة - الأول الثانوي منتظم (فصول 1/1 ، 6/1) (2 فصل × 4 حصص = 8 حصص)", classesCount: 4, assignedHours: 16, officialTarget: "14", mandateInfo: "معلم أساسي بمدرسة محمد هاشم النقيب (زيادة حصتين +2 عن النصاب)", statement: "زيادة حصتين (+2)" },
             { name: "أ/ آمال إبراهيم محمد حامد", roleNote: "معلمة خدمات - حصص المعلم س كاملة", classesDesc: "برمجة - الثاني الثانوي خدمات (فصل 7/2) (1 فصل × 6 حصص) + ثقافة مالية - الثاني الثانوي خدمات (فصل 7/2) (1 فصل × 2 حصة) + برمجة - الأول الثانوي خدمات (فصل 8/1) (1 فصل × 4 حصص)", classesCount: 3, assignedHours: 12, officialTarget: "-", mandateInfo: "مكلفة بفصول الخدمات (المعلم س سابقاً) بمجموع 12 حصة كاملة بمدرستنا", statement: "تغطية العجز كاملة (12 حصة)" }
         ];
 
@@ -2076,92 +2076,320 @@
         ];
 
         // -------------------------------------------------------------
-        // NEW ROOT FEATURE: TWO-WAY SYNC (RADICAL SOLUTION)
+        // منظومة مزامنة محسنة ثنائية الاتجاه مع منع تكرار السجلات
         // -------------------------------------------------------------
-        
-        function getTeachersData() { return JSON.parse(localStorage.getItem("mhn_teachers")) || defaultTeachers; }
-        function saveTeachersData(data) { localStorage.setItem("mhn_teachers", JSON.stringify(data)); }
-        function getQuotaData() { return JSON.parse(localStorage.getItem("mhn_quota_plan")) || defaultQuotaPlan; }
-        function saveQuotaData(data) { localStorage.setItem("mhn_quota_plan", JSON.stringify(data)); }
-        function getMasterSchedule() { return JSON.parse(localStorage.getItem("mhn_master_schedule")) || defaultMasterSchedule; }
-        function saveMasterSchedule(data) { localStorage.setItem("mhn_master_schedule", JSON.stringify(data)); }
 
-        // دالة المزامنة السحابية (ترسل قاعدة البيانات بالكامل مع أي تعديل وتطابق صيغ Payload مع سكريبت جوجل)
-        function syncDatabaseToCloud(actionType = null, payloadData = null) {
-            const url = localStorage.getItem("mhn_gas_webhook");
-            if (!url) return;
+        const CLOUD_SYNC_CONFIG = {
+            requestTimeoutMs: 30000,
+            maxRetries: 2,
+            retryDelayMs: 900
+        };
 
-            const fullDb = {
-                teachers: getTeachersData(),
-                quotaPlan: getQuotaData(),
-                masterSchedule: getMasterSchedule(),
-                submissions: JSON.parse(localStorage.getItem("mhn_submissions")) || [],
-                evaluations: JSON.parse(localStorage.getItem("mhn_evaluations")) || []
+        let cloudSyncQueue = Promise.resolve();
+        let cloudHydrationCompleted = false;
+
+        function safeParseLocal(key, fallback) {
+            try {
+                const raw = localStorage.getItem(key);
+                if (!raw) return fallback;
+                const parsed = JSON.parse(raw);
+                return parsed === null || parsed === undefined ? fallback : parsed;
+            } catch (error) {
+                console.warn("تعذر قراءة التخزين المحلي للمفتاح:", key, error);
+                return fallback;
+            }
+        }
+
+        function stableValue(value) {
+            if (Array.isArray(value)) return value.map(stableValue);
+            if (value && typeof value === "object") {
+                return Object.keys(value).sort().reduce((out, key) => {
+                    out[key] = stableValue(value[key]);
+                    return out;
+                }, {});
+            }
+            return value;
+        }
+
+        function stableStringify(value) {
+            return JSON.stringify(stableValue(value));
+        }
+
+        function uniqueRecords(list, keyFunction) {
+            if (!Array.isArray(list)) return [];
+            const map = new Map();
+            list.forEach((item, index) => {
+                if (!item || typeof item !== "object") return;
+                const key = String(keyFunction(item, index) || "").trim();
+                if (!key) return;
+                map.set(key, item);
+            });
+            return Array.from(map.values());
+        }
+
+        function normalizeTeachers(data) {
+            const source = data && typeof data === "object" && !Array.isArray(data) ? data : {};
+            const result = {};
+            Object.entries(source).forEach(([key, teacher]) => {
+                if (!teacher || typeof teacher !== "object") return;
+                const code = String(teacher.code || key || "").trim();
+                if (!code) return;
+                result[code] = { ...teacher, code };
+            });
+            return result;
+        }
+
+        function normalizeQuota(list) {
+            return uniqueRecords(list, item => {
+                const name = String(item.name || "").trim().toLocaleLowerCase("ar");
+                const desc = String(item.classesDesc || "").trim().toLocaleLowerCase("ar");
+                const role = String(item.roleNote || "").trim().toLocaleLowerCase("ar");
+                return name + "|" + desc + "|" + role;
+            });
+        }
+
+        function normalizeSchedule(list) {
+            return uniqueRecords(list, (item, index) => {
+                const day = String(item.day || "").trim();
+                return day || ("row-" + index);
+            });
+        }
+
+        function normalizeSubmissions(list) {
+            return uniqueRecords(list, item => {
+                const code = String(item.code || "").trim();
+                return code || (item.id !== undefined ? "id:" + String(item.id) : "");
+            }).sort((a, b) => {
+                const ta = Date.parse(a.timestamp || "") || Number(a.id) || 0;
+                const tb = Date.parse(b.timestamp || "") || Number(b.id) || 0;
+                return ta - tb;
+            });
+        }
+
+        function normalizeEvaluations(list) {
+            return uniqueRecords(list, item => {
+                if (item.id !== undefined && item.id !== null && String(item.id).trim() !== "") {
+                    return "id:" + String(item.id);
+                }
+                return (
+                    String(item.name || "").trim().toLocaleLowerCase("ar") + "|" +
+                    String(item.date || "").trim()
+                );
+            });
+        }
+
+        function normalizeCloudDatabase(data) {
+            const db = data && data.database && typeof data.database === "object"
+                ? data.database
+                : (data || {});
+            return {
+                teachers: normalizeTeachers(db.teachers),
+                quotaPlan: normalizeQuota(db.quotaPlan),
+                masterSchedule: normalizeSchedule(db.masterSchedule),
+                submissions: normalizeSubmissions(db.submissions),
+                evaluations: normalizeEvaluations(db.evaluations)
             };
+        }
 
-            const postData = {
-                database: fullDb
-            };
+        function readLocalDatabase() {
+            return normalizeCloudDatabase({
+                teachers: safeParseLocal("mhn_teachers", defaultTeachers),
+                quotaPlan: safeParseLocal("mhn_quota_plan", defaultQuotaPlan),
+                masterSchedule: safeParseLocal("mhn_master_schedule", defaultMasterSchedule),
+                submissions: safeParseLocal("mhn_submissions", []),
+                evaluations: safeParseLocal("mhn_evaluations", defaultEvaluations)
+            });
+        }
 
+        function saveLocalDatabase(database) {
+            const db = normalizeCloudDatabase(database);
+            localStorage.setItem("mhn_teachers", JSON.stringify(db.teachers));
+            localStorage.setItem("mhn_quota_plan", JSON.stringify(db.quotaPlan));
+            localStorage.setItem("mhn_master_schedule", JSON.stringify(db.masterSchedule));
+            localStorage.setItem("mhn_submissions", JSON.stringify(db.submissions));
+            localStorage.setItem("mhn_evaluations", JSON.stringify(db.evaluations));
+            return db;
+        }
+
+        function getTeachersData() {
+            return normalizeTeachers(safeParseLocal("mhn_teachers", defaultTeachers));
+        }
+        function saveTeachersData(data) {
+            localStorage.setItem("mhn_teachers", JSON.stringify(normalizeTeachers(data)));
+        }
+        function getQuotaData() {
+            return normalizeQuota(safeParseLocal("mhn_quota_plan", defaultQuotaPlan));
+        }
+        function saveQuotaData(data) {
+            localStorage.setItem("mhn_quota_plan", JSON.stringify(normalizeQuota(data)));
+        }
+        function getMasterSchedule() {
+            return normalizeSchedule(safeParseLocal("mhn_master_schedule", defaultMasterSchedule));
+        }
+        function saveMasterSchedule(data) {
+            localStorage.setItem("mhn_master_schedule", JSON.stringify(normalizeSchedule(data)));
+        }
+
+        function getConfiguredCloudUrl() {
+            return String(
+                localStorage.getItem("mhn_gas_webhook") || DEFAULT_GAS_URL || ""
+            ).trim();
+        }
+
+        function hasCloudRecords(db) {
+            return !!(
+                Object.keys(db.teachers || {}).length ||
+                (db.quotaPlan || []).length ||
+                (db.masterSchedule || []).length ||
+                (db.submissions || []).length ||
+                (db.evaluations || []).length
+            );
+        }
+
+        function setSyncStatus(message, isError = false) {
+            console[isError ? "warn" : "info"]("[مزامنة السحابة] " + message);
+            const status = document.getElementById("cloudSyncStatus");
+            if (status) {
+                status.textContent = message;
+                status.dataset.state = isError ? "error" : "ok";
+            }
+        }
+
+        async function fetchWithTimeout(url, options = {}) {
+            const controller = new AbortController();
+            const timeout = setTimeout(
+                () => controller.abort(),
+                CLOUD_SYNC_CONFIG.requestTimeoutMs
+            );
+            try {
+                return await fetch(url, {
+                    ...options,
+                    signal: controller.signal,
+                    redirect: "follow",
+                    cache: "no-store"
+                });
+            } finally {
+                clearTimeout(timeout);
+            }
+        }
+
+        async function syncDatabaseToCloud(actionType = null, payloadData = null) {
+            const url = getConfiguredCloudUrl();
+            if (!url) {
+                setSyncStatus("لم يتم ضبط رابط Google Apps Script.", true);
+                return { ok: false, error: "رابط المزامنة غير موجود." };
+            }
+
+            const snapshot = readLocalDatabase();
+            const postData = { database: snapshot };
             if (actionType) postData.action = actionType;
             if (payloadData) postData.payload = payloadData;
 
-            // إرسال البيانات كـ text/plain لتخطي مشاكل CORS في المتصفحات وبنية البيانات متطابقة مع كود جوجل شيتس
-            fetch(url, {
-                method: "POST",
-                headers: { "Content-Type": "text/plain;charset=utf-8" },
-                body: JSON.stringify(postData)
-            }).then(res => console.log("تمت المزامنة السحابية بنجاح وتسجيل البيانات في جوجل شيت"))
-              .catch(err => console.log("خطأ في المزامنة:", err));
+            cloudSyncQueue = cloudSyncQueue
+                .catch(() => null)
+                .then(async () => {
+                    let lastError = null;
+
+                    for (let attempt = 0; attempt <= CLOUD_SYNC_CONFIG.maxRetries; attempt++) {
+                        try {
+                            const response = await fetchWithTimeout(url, {
+                                method: "POST",
+                                headers: { "Content-Type": "text/plain;charset=utf-8" },
+                                body: JSON.stringify(postData)
+                            });
+
+                            const text = await response.text();
+                            let result = null;
+                            try { result = text ? JSON.parse(text) : null; } catch (_) {}
+
+                            if (!response.ok) {
+                                throw new Error("استجابة الخادم HTTP " + response.status);
+                            }
+                            if (result && result.ok === false) {
+                                throw new Error(result.error || "رفض الخادم عملية الحفظ.");
+                            }
+
+                            setSyncStatus("تم إرسال البيانات إلى السحابة بنجاح.");
+                            return { ok: true, result };
+                        } catch (error) {
+                            lastError = error;
+                            if (attempt < CLOUD_SYNC_CONFIG.maxRetries) {
+                                await new Promise(resolve =>
+                                    setTimeout(resolve, CLOUD_SYNC_CONFIG.retryDelayMs * (attempt + 1))
+                                );
+                            }
+                        }
+                    }
+
+                    setSyncStatus(
+                        "تعذرت المزامنة: " + String(lastError && lastError.message || lastError),
+                        true
+                    );
+                    throw lastError || new Error("فشلت المزامنة.");
+                });
+
+            return cloudSyncQueue;
         }
 
-        // دالة جلب البيانات من السحابة (تتصل بـ doGet في Google Script)
         async function fetchCloudDataOnLoad() {
-            const url = localStorage.getItem("mhn_gas_webhook");
-            if (!url) return;
+            const url = getConfiguredCloudUrl();
+            if (!url) {
+                setSyncStatus("أدخل رابط Google Apps Script أولًا.", true);
+                return false;
+            }
 
             try {
-                // استيراد البيانات استناداً لمعامل action=getData الموضح في الكود
-                const response = await fetch(url + "?action=getData");
-                if (response.ok) {
-                    const dbStr = await response.text();
-                    if (dbStr && dbStr.length > 10 && dbStr !== "null") {
-                        const cloudData = JSON.parse(dbStr);
-                        
-                        if (cloudData.teachers) saveTeachersData(cloudData.teachers);
-                        if (cloudData.quotaPlan) saveQuotaData(cloudData.quotaPlan);
-                        if (cloudData.masterSchedule) saveMasterSchedule(cloudData.masterSchedule);
-                        if (cloudData.submissions) localStorage.setItem("mhn_submissions", JSON.stringify(cloudData.submissions));
-                        if (cloudData.evaluations) localStorage.setItem("mhn_evaluations", JSON.stringify(cloudData.evaluations));
+                setSyncStatus("جارٍ استيراد البيانات من Google Sheets...");
+                const response = await fetchWithTimeout(
+                    url + (url.includes("?") ? "&" : "?") + "action=getData&_=" + Date.now(),
+                    { method: "GET" }
+                );
 
-                        // إعادة رسم الواجهة
-                        populateSelectTeacherDropdown();
-                        populateIndividualTeacherDropdown();
-                        renderTeachersRegistry();
-                        renderQuotaTable();
-                        renderMasterTimetable();
-                        renderSignaturesTable();
-                        renderSubmissionsTable();
-                        renderEvaluationsTable();
-                        updateStatistics();
-                        console.log("تم استيراد البيانات من السحابة بنجاح!");
-                    }
+                if (!response.ok) {
+                    throw new Error("تعذر جلب البيانات. HTTP " + response.status);
                 }
+
+                const raw = await response.text();
+                if (!raw || raw.trim() === "" || raw.trim() === "null") {
+                    throw new Error("الخادم أعاد استجابة فارغة.");
+                }
+
+                const parsed = JSON.parse(raw);
+                if (parsed && parsed.ok === false) {
+                    throw new Error(parsed.error || "تعذر قراءة قاعدة البيانات.");
+                }
+
+                const cloudDb = normalizeCloudDatabase(parsed);
+
+                if (hasCloudRecords(cloudDb)) {
+                    saveLocalDatabase(cloudDb);
+                    cloudHydrationCompleted = true;
+                    renderAllDashboardData();
+                    setSyncStatus("تم استيراد البيانات من السحابة بنجاح.");
+                    return true;
+                }
+
+                const localDb = readLocalDatabase();
+                if (hasCloudRecords(localDb)) {
+                    await syncDatabaseToCloud("initial_seed");
+                    setSyncStatus("قاعدة السحابة فارغة؛ تم إرسال البيانات المحلية الأولية.");
+                } else {
+                    setSyncStatus("تم الاتصال، ولا توجد بيانات مسجلة بعد.");
+                }
+
+                cloudHydrationCompleted = true;
+                return true;
             } catch (error) {
-                console.warn("جلب البيانات من السحابة فشل، سيتم استخدام البيانات المحلية (Offline).", error);
+                setSyncStatus(
+                    "تعذر استيراد السحابة؛ تم الاحتفاظ بالبيانات المحلية. " +
+                    String(error && error.message || error),
+                    true
+                );
+                return false;
             }
         }
 
-        function initAppStorage() {
-            if (!localStorage.getItem("mhn_gas_webhook")) {
-                localStorage.setItem("mhn_gas_webhook", DEFAULT_GAS_URL);
-            }
-            if (!localStorage.getItem("mhn_teachers")) saveTeachersData(defaultTeachers);
-            if (!localStorage.getItem("mhn_quota_plan")) saveQuotaData(defaultQuotaPlan);
-            if (!localStorage.getItem("mhn_master_schedule")) saveMasterSchedule(defaultMasterSchedule);
-            if (!localStorage.getItem("mhn_submissions")) localStorage.setItem("mhn_submissions", JSON.stringify([]));
-            if (!localStorage.getItem("mhn_evaluations")) localStorage.setItem("mhn_evaluations", JSON.stringify(defaultEvaluations));
-
+        function renderAllDashboardData() {
             populateSelectTeacherDropdown();
             populateIndividualTeacherDropdown();
             renderTeachersRegistry();
@@ -2171,7 +2399,24 @@
             renderSubmissionsTable();
             renderEvaluationsTable();
             updateStatistics();
-            document.getElementById("printDateSpan").innerText = new Date().toLocaleDateString('ar-EG');
+        }
+
+        function initAppStorage() {
+            if (!localStorage.getItem("mhn_gas_webhook")) {
+                localStorage.setItem("mhn_gas_webhook", DEFAULT_GAS_URL);
+            }
+
+            if (!localStorage.getItem("mhn_teachers")) saveTeachersData(defaultTeachers);
+            if (!localStorage.getItem("mhn_quota_plan")) saveQuotaData(defaultQuotaPlan);
+            if (!localStorage.getItem("mhn_master_schedule")) saveMasterSchedule(defaultMasterSchedule);
+            if (!localStorage.getItem("mhn_submissions")) localStorage.setItem("mhn_submissions", JSON.stringify([]));
+            if (!localStorage.getItem("mhn_evaluations")) localStorage.setItem("mhn_evaluations", JSON.stringify(defaultEvaluations));
+
+            saveLocalDatabase(readLocalDatabase());
+            renderAllDashboardData();
+
+            const printDate = document.getElementById("printDateSpan");
+            if (printDate) printDate.innerText = new Date().toLocaleDateString("ar-EG");
         }
 
         function populateSelectTeacherDropdown() {
@@ -2254,14 +2499,12 @@
 
             const code = document.getElementById("teacherCode").value.trim();
             
-            // --- ميزة منع التكرار وإجبار التعديل من خلال لوحة التحكم فقط ---
             let submissions = JSON.parse(localStorage.getItem("mhn_submissions")) || [];
             const isExist = submissions.some(s => s.code === code);
             if(isExist) {
                 alert("تم إرسال إقرار هذا المعلم مسبقاً! ⛔\nلتجنب تكرار البيانات، لا يمكن الإرسال مرة أخرى. يرجى التوجه للوحة التحكم للتعديل.");
                 return;
             }
-            // ------------------------------------------------------------------
 
             const name = document.getElementById("teacherName").value.trim();
             const nationalId = document.getElementById("nationalId").value.trim();
@@ -2292,7 +2535,6 @@
             submissions.push(latestSubmission);
             localStorage.setItem("mhn_submissions", JSON.stringify(submissions));
 
-            // تشغيل المزامنة السحابية مع إرسال Payload خاص لإضافة صف جديد في جوجل شيت
             syncDatabaseToCloud("new_submission", latestSubmission);
 
             renderSubmissionsTable();
@@ -2375,18 +2617,15 @@
         }
         function closeLoginDialog() { document.getElementById("loginDialog").classList.remove("active"); }
 
-        // تم ربط استيراد البيانات التلقائي بحدث فتح لوحة التحكم
         async function verifyAdminPassword() {
             const pass = document.getElementById("adminPasswordInput").value.trim();
             if (pass === "mrmahmoud2026") {
                 const btn = document.getElementById("btnLoginAdmin");
                 const originalText = btn.innerHTML;
                 
-                // عرض مؤشر التحميل والاستيراد
                 btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> جاري استيراد البيانات السحابية...`;
                 btn.disabled = true;
 
-                // تحديث البيانات من السحابة قبل عرض اللوحة
                 await fetchCloudDataOnLoad();
 
                 btn.innerHTML = originalText;
@@ -2459,8 +2698,8 @@
         function closeSubModal() { document.getElementById("subModal").classList.remove("active"); }
         function saveSubFromModal() {
             const id = parseInt(document.getElementById("modalSubId").value);
-            let subs = JSON.parse(localStorage.getItem("mhn_submissions")) || [];
-            const item = subs.find(s => s.id === id);
+            let subs = normalizeSubmissions(safeParseLocal("mhn_submissions", []));
+            const item = subs.find(s => String(s.id) === String(id));
             if (item) {
                 item.name = document.getElementById("modalSubName").value;
                 item.subject = document.getElementById("modalSubSubject").value;
@@ -2472,19 +2711,18 @@
                 closeSubModal();
                 renderSubmissionsTable();
                 renderSignaturesTable();
-                // المزامنة بعد التعديل لرفع التحديث للسحابة دون إضافة صف جديد
                 syncDatabaseToCloud("update_submission", item);
             }
         }
         function deleteSubmission(id) {
             if (confirm("هل تريد حذف هذا الإقرار نهائياً؟")) {
-                let submissions = JSON.parse(localStorage.getItem("mhn_submissions")) || [];
-                submissions = submissions.filter(s => s.id !== id);
+                let submissions = normalizeSubmissions(safeParseLocal("mhn_submissions", []));
+                submissions = submissions.filter(s => String(s.id) !== String(id));
                 localStorage.setItem("mhn_submissions", JSON.stringify(submissions));
                 renderSubmissionsTable();
                 renderSignaturesTable();
                 updateStatistics();
-                syncDatabaseToCloud(); // تحديث قاعدة البيانات السحابية بعد الحذف
+                syncDatabaseToCloud();
             }
         }
 
@@ -2837,11 +3075,25 @@
                 item6: parseInt(document.getElementById("evalItem6").value),
                 total: calc.total, rating: calc.rating, notes: document.getElementById("modalEvalNotes").value.trim()
             };
-            let evals = JSON.parse(localStorage.getItem("mhn_evaluations")) || [];
+            let evals = normalizeEvaluations(safeParseLocal("mhn_evaluations", []));
             if (idVal) {
-                const idx = evals.findIndex(e => e.id === parseInt(idVal));
+                const idx = evals.findIndex(e => String(e.id) === String(parseInt(idVal)));
                 if (idx !== -1) evals[idx] = newEval;
-            } else evals.push(newEval);
+                else evals.push(newEval);
+            } else {
+                const duplicateIndex = evals.findIndex(e =>
+                    String(e.name || "").trim().toLocaleLowerCase("ar") ===
+                        String(newEval.name || "").trim().toLocaleLowerCase("ar") &&
+                    String(e.date || "") === String(newEval.date || "")
+                );
+                if (duplicateIndex >= 0) {
+                    newEval.id = evals[duplicateIndex].id;
+                    evals[duplicateIndex] = newEval;
+                } else {
+                    evals.push(newEval);
+                }
+            }
+            evals = normalizeEvaluations(evals);
             localStorage.setItem("mhn_evaluations", JSON.stringify(evals));
             closeEvalModal(); renderEvaluationsTable();
             syncDatabaseToCloud();
@@ -2904,17 +3156,27 @@
             window.print();
         }
         function saveWebhookUrl() {
-            localStorage.setItem("mhn_gas_webhook", document.getElementById("gasWebhookUrl").value.trim());
+            const input = document.getElementById("gasWebhookUrl");
+            const url = String(input ? input.value : "").trim();
+            if (!/^https:\/\/script\.google\.com\/macros\/s\//i.test(url) || !/\/exec(?:\?|$)/.test(url)) {
+                alert("يرجى إدخال رابط Web App صحيح من Google Apps Script ينتهي بـ /exec.");
+                return;
+            }
+            localStorage.setItem("mhn_gas_webhook", url);
+            setSyncStatus("تم حفظ رابط المزامنة.");
             alert("تم حفظ رابط المزامنة بنجاح!");
         }
         async function testCloudSync() {
-            const url = localStorage.getItem("mhn_gas_webhook") || document.getElementById("gasWebhookUrl").value.trim();
+            const input = document.getElementById("gasWebhookUrl");
+            const url = getConfiguredCloudUrl() || String(input ? input.value : "").trim();
             if (!url) { alert("أدخل الرابط أولاً!"); return; }
+            localStorage.setItem("mhn_gas_webhook", url);
             try {
-                // إجبار تشغيل دالة المزامنة السحابية الجذرية للاختبار
-                syncDatabaseToCloud();
-                alert("تم إرسال طلب المزامنة السحابية الشاملة بنجاح!");
-            } catch (err) { alert("خطأ: " + err.message); }
+                await syncDatabaseToCloud("manual_test");
+                alert("اكتمل إرسال طلب المزامنة. راجع سجل العمليات في Google Sheets للتأكد من الحفظ.");
+            } catch (err) {
+                alert("تعذرت المزامنة: " + String(err && err.message || err));
+            }
         }
         function exportBackupJson() {
             const backup = { teachers: getTeachersData(), quotaPlan: getQuotaData(), masterSchedule: getMasterSchedule(), submissions: JSON.parse(localStorage.getItem("mhn_submissions"))||[], evaluations: JSON.parse(localStorage.getItem("mhn_evaluations"))||[], date: new Date().toISOString() };
@@ -2923,27 +3185,36 @@
             a.download = `backup_${new Date().toISOString().slice(0,10)}.json`; a.click();
         }
         function importBackupJson(event) {
+            const file = event && event.target && event.target.files ? event.target.files[0] : null;
+            if (!file) return;
             const reader = new FileReader();
-            reader.onload = function(e) {
+            reader.onload = async function(e) {
                 try {
                     const data = JSON.parse(e.target.result);
-                    if(data.teachers) saveTeachersData(data.teachers);
-                    if(data.quotaPlan) saveQuotaData(data.quotaPlan);
-                    if(data.masterSchedule) saveMasterSchedule(data.masterSchedule);
-                    if(data.submissions) localStorage.setItem("mhn_submissions", JSON.stringify(data.submissions));
-                    if(data.evaluations) localStorage.setItem("mhn_evaluations", JSON.stringify(data.evaluations));
-                    initAppStorage(); 
-                    syncDatabaseToCloud(); // مزامنة البيانات المستوردة للسحابة فوراً
-                    alert("تم الاستيراد والمزامنة بنجاح!");
-                } catch(err) { alert("ملف تالف!"); }
+                    const imported = normalizeCloudDatabase(data);
+                    saveLocalDatabase(imported);
+                    initAppStorage();
+                    await syncDatabaseToCloud("import_backup");
+                    alert("تم استيراد النسخة الاحتياطية وإرسالها للمزامنة.");
+                } catch(err) {
+                    alert("تعذر استيراد النسخة الاحتياطية: " + String(err && err.message || err));
+                } finally {
+                    if (event && event.target) event.target.value = "";
+                }
             };
-            if(event.target.files[0]) reader.readAsText(event.target.files[0]);
+            reader.onerror = function() {
+                alert("تعذر قراءة ملف النسخة الاحتياطية.");
+            };
+            reader.readAsText(file);
         }
 
-        // عند فتح الصفحة، تهيئة النظام
-        window.addEventListener("DOMContentLoaded", () => {
+        window.addEventListener("DOMContentLoaded", async () => {
             initAppStorage();
-            document.getElementById("gasWebhookUrl").value = localStorage.getItem("mhn_gas_webhook") || DEFAULT_GAS_URL;
+            const webhookInput = document.getElementById("gasWebhookUrl");
+            if (webhookInput) {
+                webhookInput.value = getConfiguredCloudUrl();
+            }
+            await fetchCloudDataOnLoad();
         });
     </script>
 </body>
